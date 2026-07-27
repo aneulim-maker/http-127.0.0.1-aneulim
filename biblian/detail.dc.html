@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIBLIAN · 제품 상세</title>
+<meta name="description" content="두피 고민에 맞춘 비블리안 헤어 케어 제품을 만나보세요.">
+<!-- 링크 공유 미리보기 (Open Graph) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="BIBLIAN" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="BIBLIAN · 제품 상세" />
+<meta property="og:description" content="두피 고민에 맞춘 비블리안 헤어 케어 제품을 만나보세요." />
+<meta property="og:url" content="https://eulim.vercel.app/biblian/detail.dc.html" />
+<meta property="og:image" content="https://eulim.vercel.app/og-biblian.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="BIBLIAN — 도시인들을 위한 헤어 웰니스" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="BIBLIAN · 제품 상세" />
+<meta name="twitter:description" content="두피 고민에 맞춘 비블리안 헤어 케어 제품을 만나보세요." />
+<meta name="twitter:image" content="https://eulim.vercel.app/og-biblian.jpg" />
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#2B2420"><svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#2B2420"/><text x="600" y="430" text-anchor="middle" fill="#F7F1E7" font-family="serif" font-size="90" font-weight="700" letter-spacing="14">BIBLIAN</text></svg></template>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+/* ===== Biblian mobile responsive ===== */
+@media (max-width:640px){
+  header [style*="grid-template-columns: 1fr auto 1fr"]{display:flex!important;flex-direction:column!important;align-items:center!important;gap:10px!important;padding:12px 16px!important}
+  header nav{order:2;flex-wrap:wrap;justify-content:center;gap:14px!important;font-size:12.5px!important}
+  header nav + a{order:1}
+  header nav + a + div{order:3;justify-content:center!important;gap:18px!important}
+}
+@media (max-width:860px){
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1fr 1.06fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1.05fr .95fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 360px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 400px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 200px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 280px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr auto;"]{grid-template-columns:1fr!important}
+  [style*="padding: 64px 56px"]{padding:40px 26px!important}
+  [style*="padding: 60px 56px"]{padding:38px 24px!important}
+  [style*="padding: 80px 28px"]{padding:52px 22px!important}
+  [style*="padding: 66px 28px"]{padding:44px 22px!important}
+  [style*="padding: 44px 48px"]{padding:30px 26px!important}
+  [style*="font-size: 44px"]{font-size:32px!important}
+}
+@media (max-width:560px){
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:1fr 1fr!important}
+  header nav{gap:13px!important;font-size:12px!important}
+  header [style*="grid-template-columns: 1fr auto 1fr"]{padding-left:16px!important;padding-right:16px!important}
+  [style*="padding: 60px"]{padding:34px 22px!important}
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F1EADD;color:#2B2420;font-family:'Pretendard',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+image-slot{display:block}
+image-slot::part(ring){display:none!important}
+#bl-src{position:absolute;left:-9999px}
+.bl-src{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-start;justify-content:center;background:rgba(43,36,32,.5);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+#bl-src:checked~.bl-src{opacity:1;pointer-events:auto}
+.bl-src__p{transform:translateY(-14px);transition:transform .28s}
+#bl-src:checked~.bl-src .bl-src__p{transform:translateY(0)}
+summary{list-style:none;cursor:pointer}
+summary::-webkit-details-marker{display:none}
+details[open] .acc-plus{transform:rotate(45deg)}
+</style>
+</helmet>
+
+<div style="width:100%;overflow:hidden">
+
+<div style="background:#2B2420;color:#EDE4D5;font-size:12px;letter-spacing:.04em;text-align:center;padding:9px 16px;font-weight:500">회원가입 시 5,000원 적립금 · 2개 이상 골라담으면 10% OFF + 사은품 증정</div>
+
+<input type="checkbox" id="bl-src">
+<div class="bl-src">
+  <label for="bl-src" style="position:absolute;inset:0;cursor:default"></label>
+  <div class="bl-src__p" style="position:relative;z-index:1;width:100%;max-width:680px;margin:12vh 24px 0;background:#F7F1E7;border-radius:18px;box-shadow:0 30px 60px rgba(43,36,32,.32);padding:28px 30px 32px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:600">무엇을 찾으시나요?</div>
+      <label for="bl-src" style="cursor:pointer;width:34px;height:34px;border-radius:50%;background:#EDE4D5;display:flex;align-items:center;justify-content:center;font-size:15px;color:#4A4038">✕</label>
+    </div>
+    <form action="list.dc.html" style="display:flex;align-items:center;gap:12px;border:1.5px solid #2B2420;border-radius:12px;padding:0 8px 0 16px;height:56px;background:#fff">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8D8275" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" name="q" placeholder="제품명·고민·성분으로 검색 (예: 탈모 샴푸)" style="flex:1;border:none;outline:none;background:transparent;font-size:15px;font-family:'Pretendard';color:#2B2420">
+      <button type="submit" style="height:40px;padding:0 18px;border:none;border-radius:9px;background:#2B2420;color:#F7F1E7;font-size:13.5px;font-weight:600;cursor:pointer">검색</button>
+    </form>
+    <div style="margin-top:22px">
+      <div style="font-size:11.5px;font-weight:700;color:#8A6A3C;letter-spacing:.08em;margin-bottom:12px">인기 검색어</div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px">
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">탈모 샴푸</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">헤어 마스크</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">어드밴스드 앰플</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">헤어 키퍼</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">지성 두피</a>
+        <a href="giftset.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">선물세트</a>
+      </div>
+    </div>
+    <div style="margin-top:24px;border-top:1px solid rgba(60,40,20,.12);padding-top:20px">
+      <div style="font-size:11.5px;font-weight:700;color:#8A6A3C;letter-spacing:.08em;margin-bottom:12px">바로가기</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <a href="list.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">전체 상품 →</a>
+        <a href="giftset.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">선물세트 →</a>
+        <a href="community.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">리뷰 →</a>
+        <a href="brand.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">브랜드 스토리 →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header style="position:sticky;top:0;z-index:50;background:rgba(241,234,221,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(60,40,20,.10)">
+  <div style="max-width:1180px;margin:0 auto;padding:16px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+    <nav style="display:flex;gap:26px;font-size:13.5px;font-weight:600;letter-spacing:.02em;color:#4A4038">
+      <a href="list.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Shop</a><a href="brand.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">About</a><a href="community.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Community</a><a href="giftset.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Set&amp;Gift</a>
+    </nav>
+    <a href="home.dc.html" style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:22px;letter-spacing:.22em;color:#2B2420;text-decoration:none;text-align:center">BIBLIAN</a>
+    <div style="display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:13px;font-weight:600;color:#4A4038">
+      <label for="bl-src" style="cursor:pointer">Search</label><a href="login.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Login</a><a href="cart.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Cart (0)</a>
+    </div>
+  </div>
+</header>
+
+<!-- breadcrumb -->
+<div style="max-width:1180px;margin:0 auto;padding:20px 28px 0;font-size:12.5px;color:#8D8275;display:flex;gap:8px">
+  <a href="home.dc.html" style="color:#8D8275;text-decoration:none">HOME</a><span>/</span><span>FILL UP</span><span>/</span><span style="color:#2B2420">헤어 마스크 500ml</span>
+</div>
+
+<!-- product top -->
+<section style="max-width:1180px;margin:0 auto;padding:26px 28px 20px;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:stretch">
+  <!-- gallery -->
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="flex:1;min-height:440px;border-radius:20px;overflow:hidden;background:#FFFDF9;border:1px solid rgba(60,40,20,.09)">
+      <image-slot id="bd-main" src="https://biblian.co.kr/web/product/medium/202602/8264d0f146ae8c4fbb0c9ee1a18a3ba5.png" style="width:100%;height:100%;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 메인 컷 · 앵버 보틀 스튜디오 정물"></image-slot>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <image-slot id="bd-t1" src="https://biblian.co.kr/web/product/medium/202602/8264d0f146ae8c4fbb0c9ee1a18a3ba5.png" style="width:100%;aspect-ratio:1/1;border-radius:12px;border:1px solid rgba(60,40,20,.09);background:#FBF6EC" shape="rounded" radius="12" fit="contain" placeholder="정면"></image-slot>
+      <image-slot id="bd-t2" src="https://biblian.co.kr/web/product/medium/202311/03304e7d16adc1d123abc0b81289e5a2.png" style="width:100%;aspect-ratio:1/1;border-radius:12px;border:1px solid rgba(60,40,20,.09);background:#FBF6EC" shape="rounded" radius="12" fit="contain" placeholder="텍스처"></image-slot>
+      <image-slot id="bd-t3" src="https://biblian.co.kr/web/product/medium/202505/89a4fabce91b6e39b3a95820b602b58e.png" style="width:100%;aspect-ratio:1/1;border-radius:12px;border:1px solid rgba(60,40,20,.09);background:#FBF6EC" shape="rounded" radius="12" fit="contain" placeholder="원료"></image-slot>
+      <image-slot id="bd-t4" src="https://biblian.co.kr/web/product/medium/202311/60b0bcc6d90d041bb78f1ff1c7fc3d81.png" style="width:100%;aspect-ratio:1/1;border-radius:12px;border:1px solid rgba(60,40,20,.09);background:#FBF6EC" shape="rounded" radius="12" fit="contain" placeholder="연출"></image-slot>
+    </div>
+  </div>
+  <!-- purchase panel -->
+  <div style="position:sticky;top:96px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.16em;color:#55614A">FILL UP · 손상 케어</div>
+    <h1 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:31px;line-height:1.35;margin:12px 0 0;letter-spacing:-.01em">헤어 마스크 500ml</h1>
+    <p style="font-size:14.5px;line-height:1.7;color:#6E6357;margin:14px 0 0;word-break:keep-all">열·시술로 지친 모발을 깊게 채우는 집중 영양 마스크. 단 한 번의 사용으로 매끈하게 정돈된 결을 경험하세요.</p>
+    <div style="display:flex;align-items:center;gap:8px;margin:18px 0 0">
+      <span style="color:#B0502C;font-size:14px;letter-spacing:2px">★★★★★</span>
+      <span style="font-size:13px;font-weight:600;color:#2B2420">4.9</span>
+      <span style="font-size:13px;color:#8D8275">리뷰 1,240</span>
+    </div>
+    <div style="margin:22px 0 0;padding:22px 0;border-top:1px solid rgba(60,40,20,.12);border-bottom:1px solid rgba(60,40,20,.12)">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-family:'Noto Serif KR',serif;font-size:30px;font-weight:700">50,000<span style="font-size:15px;font-family:'Pretendard'"> 원</span></span>
+        <span style="font-size:14px;color:#A89C8E;text-decoration:line-through">55,000 원</span>
+        <span style="background:#B0502C;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px">10%</span>
+      </div>
+      <div style="font-size:12.5px;color:#8D8275;margin-top:8px">적립금 500원 · 무이자 할부 가능</div>
+    </div>
+    <!-- options -->
+    <div style="margin:22px 0 0">
+      <div style="font-size:12.5px;font-weight:600;color:#4A4038;margin-bottom:9px">용량</div>
+      <div style="display:flex;gap:10px">
+        <span style="flex:1;text-align:center;padding:12px;border:1.5px solid #2B2420;border-radius:10px;font-size:13px;font-weight:600">500ml · 50,000원</span>
+        <span style="flex:1;text-align:center;padding:12px;border:1px solid rgba(60,40,20,.2);border-radius:10px;font-size:13px;font-weight:500;color:#8D8275">200ml · 26,000원</span>
+      </div>
+    </div>
+    <div style="margin:16px 0 0">
+      <div style="font-size:12.5px;font-weight:600;color:#4A4038;margin-bottom:9px">구매 방식</div>
+      <div style="display:flex;gap:10px">
+        <span style="flex:1;text-align:center;padding:12px;border:1px solid rgba(60,40,20,.2);border-radius:10px;font-size:13px;font-weight:500;color:#8D8275">일반 구매</span>
+        <span style="flex:1;text-align:center;padding:12px;border:1.5px solid #55614A;border-radius:10px;font-size:13px;font-weight:600;color:#55614A;position:relative">정기배송 <span style="color:#B0502C">-15%</span></span>
+      </div>
+    </div>
+    <!-- cta -->
+    <div style="display:flex;gap:12px;margin:26px 0 0">
+      <button style="flex:1;height:56px;border:1px solid #2B2420;background:transparent;color:#2B2420;border-radius:12px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer">장바구니</button>
+      <button style="flex:1.4;height:56px;border:none;background:#2B2420;color:#F7F1E7;border-radius:12px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer">바로 구매</button>
+    </div>
+    <!-- benefit -->
+    <div style="display:flex;flex-direction:column;gap:11px;margin:26px 0 0;padding:22px;background:#FBF6EC;border-radius:14px">
+      <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#4A4038"><span style="color:#55614A;font-weight:700">✓</span> 손상 모발 집중 영양 · 보습</div>
+      <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#4A4038"><span style="color:#55614A;font-weight:700">✓</span> 매끈하고 찰랑이는 결 정돈</div>
+      <div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#4A4038"><span style="color:#55614A;font-weight:700">✓</span> VEGAN · 무실리콘 · 저자극 테스트 완료</div>
+    </div>
+    <div style="font-size:12.5px;color:#8D8275;margin-top:16px;line-height:1.6">오늘 출발 (평일 15시 이전 결제) · 3만원 이상 무료배송</div>
+  </div>
+</section>
+
+<!-- ingredient -->
+<section style="background:#55614A;color:#F1EAD9;margin-top:64px">
+  <div style="max-width:1180px;margin:0 auto;padding:66px 28px">
+    <div style="text-align:center;margin-bottom:44px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.26em;color:#CBB98C;text-transform:uppercase">Key Ingredients</div>
+      <h2 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:30px;margin:14px 0 0;color:#FBF6EC">채우는 힘, 자연에서</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div style="text-align:center">
+        <image-slot id="bd-ing1" src="https://images.pexels.com/photos/18272240/pexels-photo-18272240.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=500" style="width:150px;height:150px;margin:0 auto;border-radius:50%" shape="circle" placeholder="병풀"></image-slot>
+        <h3 style="font-family:'Noto Serif KR',serif;font-size:19px;font-weight:600;margin:20px 0 8px;color:#FBF6EC">병풀 추출물</h3>
+        <p style="font-size:13px;line-height:1.65;color:rgba(241,234,217,.78);margin:0 auto;max-width:260px;word-break:keep-all">손상된 모발 장벽을 단단하게 강화해 결을 보호합니다.</p>
+      </div>
+      <div style="text-align:center">
+        <image-slot id="bd-ing2" src="https://images.pexels.com/photos/4871156/pexels-photo-4871156.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=500" style="width:150px;height:150px;margin:0 auto;border-radius:50%" shape="circle" placeholder="시어버터"></image-slot>
+        <h3 style="font-family:'Noto Serif KR',serif;font-size:19px;font-weight:600;margin:20px 0 8px;color:#FBF6EC">시어버터</h3>
+        <p style="font-size:13px;line-height:1.65;color:rgba(241,234,217,.78);margin:0 auto;max-width:260px;word-break:keep-all">깊은 보습막을 형성해 푸석함 없이 촉촉한 윤기를 더합니다.</p>
+      </div>
+      <div style="text-align:center">
+        <image-slot id="bd-ing3" src="https://images.pexels.com/photos/9774494/pexels-photo-9774494.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=500&dpr=1" style="width:150px;height:150px;margin:0 auto;border-radius:50%" shape="circle" placeholder="판테놀"></image-slot>
+        <h3 style="font-family:'Noto Serif KR',serif;font-size:19px;font-weight:600;margin:20px 0 8px;color:#FBF6EC">판테놀</h3>
+        <p style="font-size:13px;line-height:1.65;color:rgba(241,234,217,.78);margin:0 auto;max-width:260px;word-break:keep-all">모발 속까지 스며들어 영양을 채우고 탄력을 되살립니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- how to use -->
+<section style="max-width:1180px;margin:0 auto;padding:66px 28px 20px">
+  <div style="text-align:center;margin-bottom:42px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.26em;color:#8A6A3C;text-transform:uppercase">How To Use</div>
+    <h2 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:30px;margin:14px 0 0">3단계 홈 케어 리추얼</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+    <div>
+      <image-slot id="bd-use1" src="https://images.pexels.com/photos/4055078/pexels-photo-4055078.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=700" style="width:100%;aspect-ratio:4/3;border-radius:16px" shape="rounded" radius="16" placeholder="STEP 1 · 샤워 연출"></image-slot>
+      <div style="font-family:'Noto Serif KR',serif;font-size:15px;color:#B0502C;margin:18px 0 6px">STEP 01</div>
+      <h3 style="font-size:16px;font-weight:600;margin:0 0 8px">깨끗이 세정 후 물기 제거</h3>
+      <p style="font-size:13.5px;line-height:1.65;color:#6E6357;margin:0;word-break:keep-all">샴푸 후 가볍게 수건으로 물기를 눌러 닦아냅니다.</p>
+    </div>
+    <div>
+      <image-slot id="bd-use2" src="https://images.pexels.com/photos/11554445/pexels-photo-11554445.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=700" style="width:100%;aspect-ratio:4/3;border-radius:16px" shape="rounded" radius="16" placeholder="STEP 2 · 도포 연출"></image-slot>
+      <div style="font-family:'Noto Serif KR',serif;font-size:15px;color:#B0502C;margin:18px 0 6px">STEP 02</div>
+      <h3 style="font-size:16px;font-weight:600;margin:0 0 8px">모발 중간부터 끝까지 도포</h3>
+      <p style="font-size:13.5px;line-height:1.65;color:#6E6357;margin:0;word-break:keep-all">적당량을 덜어 손상이 심한 부분부터 충분히 발라줍니다.</p>
+    </div>
+    <div>
+      <image-slot id="bd-use3" src="https://images.pexels.com/photos/4923123/pexels-photo-4923123.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=700" style="width:100%;aspect-ratio:4/3;border-radius:16px" shape="rounded" radius="16" placeholder="STEP 3 · 헹굼 연출"></image-slot>
+      <div style="font-family:'Noto Serif KR',serif;font-size:15px;color:#B0502C;margin:18px 0 6px">STEP 03</div>
+      <h3 style="font-size:16px;font-weight:600;margin:0 0 8px">3분 후 미온수로 헹굼</h3>
+      <p style="font-size:13.5px;line-height:1.65;color:#6E6357;margin:0;word-break:keep-all">3~5분간 흡수시킨 뒤 미온수로 깨끗이 헹궈냅니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- big detail image -->
+<section style="max-width:1180px;margin:0 auto;padding:40px 28px 20px">
+  <image-slot id="bd-detail" src="https://images.pexels.com/photos/19791350/pexels-photo-19791350.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1600" style="width:100%;aspect-ratio:16/7;border-radius:22px" shape="rounded" radius="22" placeholder="상세 무드컷 · 제품 + 자연 원료 와이드 연출"></image-slot>
+</section>
+
+<!-- accordion -->
+<section style="max-width:840px;margin:0 auto;padding:40px 28px 20px">
+  <details open style="border-bottom:1px solid rgba(60,40,20,.14)">
+    <summary style="display:flex;justify-content:space-between;align-items:center;padding:22px 4px;font-size:16px;font-weight:600;font-family:'Noto Serif KR',serif">제품 상세 정보<span class="acc-plus" style="font-size:20px;color:#8D8275;transition:transform .2s">+</span></summary>
+    <p style="font-size:14px;line-height:1.8;color:#6E6357;margin:0 4px 24px;word-break:keep-all">용량 500ml · 모든 모발 타입 · 특히 손상·건조모 추천. 병풀·시어버터·판테놀 등 식물 유래 성분으로 손상된 모발에 집중 영양을 공급하고, 실리콘 없이도 매끈하게 정돈된 결을 만듭니다.</p>
+  </details>
+  <details style="border-bottom:1px solid rgba(60,40,20,.14)">
+    <summary style="display:flex;justify-content:space-between;align-items:center;padding:22px 4px;font-size:16px;font-weight:600;font-family:'Noto Serif KR',serif">전성분<span class="acc-plus" style="font-size:20px;color:#8D8275;transition:transform .2s">+</span></summary>
+    <p style="font-size:13.5px;line-height:1.8;color:#6E6357;margin:0 4px 24px;word-break:keep-all">정제수, 세테아릴알코올, 병풀추출물, 시어버터, 판테놀, 글리세린, 아르간커넬오일, 판테놀, 향(식물성) 외 — 전성분은 상세 이미지에서 확인하실 수 있습니다.</p>
+  </details>
+  <details style="border-bottom:1px solid rgba(60,40,20,.14)">
+    <summary style="display:flex;justify-content:space-between;align-items:center;padding:22px 4px;font-size:16px;font-weight:600;font-family:'Noto Serif KR',serif">배송 · 교환 / 반품<span class="acc-plus" style="font-size:20px;color:#8D8275;transition:transform .2s">+</span></summary>
+    <p style="font-size:13.5px;line-height:1.8;color:#6E6357;margin:0 4px 24px;word-break:keep-all">평일 15시 이전 결제 시 당일 출발 · 3만원 이상 무료배송. 단순 변심에 의한 교환/반품은 수령 후 7일 이내 가능하며, 개봉·사용한 제품은 교환/반품이 제한될 수 있습니다.</p>
+  </details>
+</section>
+
+<!-- reviews -->
+<section style="background:#EDE4D5;margin-top:52px">
+  <div style="max-width:1180px;margin:0 auto;padding:64px 28px">
+    <div style="display:grid;grid-template-columns:.7fr 1.3fr;gap:48px;align-items:center;margin-bottom:44px">
+      <div style="text-align:center">
+        <div style="font-family:'Noto Serif KR',serif;font-size:56px;font-weight:700;line-height:1">4.9</div>
+        <div style="color:#B0502C;font-size:16px;letter-spacing:3px;margin:8px 0">★★★★★</div>
+        <div style="font-size:13px;color:#8D8275">총 1,240개 리뷰</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:center;gap:12px;font-size:12.5px;color:#6E6357"><span style="width:28px">5점</span><span style="flex:1;height:8px;background:#DDD1BE;border-radius:5px;overflow:hidden"><span style="display:block;width:88%;height:100%;background:#55614A"></span></span><span style="width:34px;text-align:right">88%</span></div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:12.5px;color:#6E6357"><span style="width:28px">4점</span><span style="flex:1;height:8px;background:#DDD1BE;border-radius:5px;overflow:hidden"><span style="display:block;width:9%;height:100%;background:#55614A"></span></span><span style="width:34px;text-align:right">9%</span></div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:12.5px;color:#6E6357"><span style="width:28px">3점</span><span style="flex:1;height:8px;background:#DDD1BE;border-radius:5px;overflow:hidden"><span style="display:block;width:2%;height:100%;background:#55614A"></span></span><span style="width:34px;text-align:right">2%</span></div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:12.5px;color:#6E6357"><span style="width:28px">2점</span><span style="flex:1;height:8px;background:#DDD1BE;border-radius:5px;overflow:hidden"><span style="display:block;width:1%;height:100%;background:#55614A"></span></span><span style="width:34px;text-align:right">1%</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <div style="background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden">
+        <image-slot id="bd-rev1" src="https://images.pexels.com/photos/4055078/pexels-photo-4055078.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&dpr=1" style="width:100%;aspect-ratio:4/3" shape="rect" placeholder="포토 리뷰"></image-slot>
+        <div style="padding:20px 20px 24px"><div style="color:#B0502C;font-size:12px;letter-spacing:2px">★★★★★</div><p style="font-size:13.5px;line-height:1.65;color:#3A322B;margin:12px 0 14px;word-break:keep-all">한 번 썼는데 손상됐던 끝부분이 정말 매끈해졌어요.</p><div style="font-size:12px;color:#8D8275">yun**** · 재구매</div></div>
+      </div>
+      <div style="background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden">
+        <image-slot id="bd-rev2" src="https://images.pexels.com/photos/11554445/pexels-photo-11554445.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&dpr=1" style="width:100%;aspect-ratio:4/3" shape="rect" placeholder="포토 리뷰"></image-slot>
+        <div style="padding:20px 20px 24px"><div style="color:#B0502C;font-size:12px;letter-spacing:2px">★★★★★</div><p style="font-size:13.5px;line-height:1.65;color:#3A322B;margin:12px 0 14px;word-break:keep-all">향이 은은하고 자극이 없어서 두피 예민한 저도 잘 맞아요.</p><div style="font-size:12px;color:#8D8275">min**** · 첫 구매</div></div>
+      </div>
+      <div style="background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden">
+        <image-slot id="bd-rev3" src="https://images.pexels.com/photos/4923123/pexels-photo-4923123.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&dpr=1" style="width:100%;aspect-ratio:4/3" shape="rect" placeholder="포토 리뷰"></image-slot>
+        <div style="padding:20px 20px 24px"><div style="color:#B0502C;font-size:12px;letter-spacing:2px">★★★★★</div><p style="font-size:13.5px;line-height:1.65;color:#3A322B;margin:12px 0 14px;word-break:keep-all">주 2회 쓰니 확실히 결이 차분해지고 윤기가 생겼어요.</p><div style="font-size:12px;color:#8D8275">soo**** · 재구매</div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:34px"><a href="community.dc.html" style="display:inline-flex;align-items:center;height:48px;padding:0 28px;border:1px solid rgba(60,40,20,.3);border-radius:10px;font-size:14px;font-weight:600;color:#2B2420;text-decoration:none">리뷰 전체 보기</a></div>
+  </div>
+</section>
+
+<!-- related -->
+<section style="max-width:1180px;margin:0 auto;padding:64px 28px 20px">
+  <h2 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:26px;margin:0 0 26px">함께 쓰면 좋은 제품</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+    <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+      <image-slot id="bd-rel1" src="https://biblian.co.kr/web/product/medium/202311/03304e7d16adc1d123abc0b81289e5a2.png" style="width:100%;height:200px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot>
+      <div style="padding:16px 18px 20px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">FILL UP</div><h3 style="font-size:14px;font-weight:600;margin:7px 0 8px">헤어 키퍼 100ml</h3><div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600">45,000 원</div></div>
+    </a>
+    <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+      <image-slot id="bd-rel2" src="https://biblian.co.kr/web/product/medium/202311/d6b69fd8c7c3cdf0b9907977ebd2d8ac.png" style="width:100%;height:200px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot>
+      <div style="padding:16px 18px 20px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14px;font-weight:600;margin:7px 0 8px">어드밴스드 샴푸 500ml</h3><div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600">42,000 원</div></div>
+    </a>
+    <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+      <image-slot id="bd-rel3" src="https://biblian.co.kr/web/product/medium/202311/60b0bcc6d90d041bb78f1ff1c7fc3d81.png" style="width:100%;height:200px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot>
+      <div style="padding:16px 18px 20px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14px;font-weight:600;margin:7px 0 8px">트리트먼트 500ml</h3><div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600">45,000 원</div></div>
+    </a>
+    <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+      <image-slot id="bd-rel4" src="https://biblian.co.kr/web/product/medium/202311/5826e638942a387d08d7c74904178674.png" style="width:100%;height:200px;background:#FBF6EC" shape="rect" fit="contain" placeholder="세트 정물"></image-slot>
+      <div style="padding:16px 18px 20px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">SET</div><h3 style="font-size:14px;font-weight:600;margin:7px 0 8px">트래블 세트</h3><div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:600">19,000 원</div></div>
+    </a>
+  </div>
+</section>
+
+<footer style="background:#EDE4D5;border-top:1px solid rgba(60,40,20,.1);margin-top:44px">
+  <div style="max-width:1180px;margin:0 auto;padding:52px 28px 40px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px">
+      <div>
+        <div style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:20px;letter-spacing:.2em">BIBLIAN</div>
+        <p style="font-size:12.5px;line-height:1.7;color:#8D8275;margin:14px 0 0;max-width:230px">도시인들을 위한 헤어 웰니스<br>Urban Detox Remedy</p>
+        <div style="display:flex;gap:12px;margin-top:18px;font-size:12px;font-weight:600;color:#6E6357"><span>Instagram</span><span>KakaoTalk</span></div>
+      </div>
+      <div><div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8A6A3C;margin-bottom:14px">SHOP</div><div style="display:flex;flex-direction:column;gap:9px;font-size:13px;color:#6E6357"><span>전체 상품</span><span>샴푸</span><span>트리트먼트</span><span>앰플 · 에센스</span></div></div>
+      <div><div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8A6A3C;margin-bottom:14px">ABOUT</div><div style="display:flex;flex-direction:column;gap:9px;font-size:13px;color:#6E6357"><span>브랜드 스토리</span><span>스토어 안내</span><span>이벤트</span><span>고객센터</span></div></div>
+      <div><div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8A6A3C;margin-bottom:14px">CS 1800-6820</div><p style="font-size:12.5px;line-height:1.7;color:#8D8275;margin:0">평일 09:00 – 17:00<br>토·일·공휴일 휴무<br>카카오톡 채널 ‘비블리안’</p></div>
+    </div>
+    <div style="border-top:1px solid rgba(60,40,20,.12);margin-top:40px;padding-top:22px;font-size:11px;color:#A89C8E;line-height:1.7">(주)뷰티앤케이 · 대표 고유리, 최정우 · 경기도 성남시 분당구 돌마로 86 엘레강스프라자 2동 701호 · 사업자등록번호 655-87-00854 · 비블리안 공식 온라인 스토어 All rights reserved</div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+</body>
+</html>

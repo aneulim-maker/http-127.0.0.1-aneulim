@@ -1,0 +1,95 @@
+<!-- ============================================================
+  eulim AI 아바타 버튼 (투명 흉상 · 부유 애니메이션 · '연락하기' 옆)
+
+  사용법:
+  1. avatar_bust_loop.webm, avatar_bust.png 를
+     사이트 루트(index.html과 같은 위치)에 넣기
+  2. [A] 버튼을 "연락하기" 버튼 코드 바로 뒤에 붙여넣기
+  3. [B] 스타일, [C] 스크립트는 </body> 바로 앞에 붙여넣기
+  * 이전 버전(원형/사각) 코드를 붙였다면 삭제하고 교체
+============================================================ -->
+
+
+<!-- [A] 버튼 본체: "연락하기" 버튼 바로 뒤에 -->
+<button id="eulim-avatar-btn" type="button" aria-label="AI 아바타에게 물어보기" title="AI 아바타에게 물어보세요">
+  <video class="eab-bust" autoplay loop muted playsinline
+         poster="avatar_bust.png">
+    <source src="avatar_bust_loop.webm" type="video/webm">
+  </video>
+  <span class="eab-shadow"></span>
+</button>
+
+
+<!-- [B] 스타일: </body> 바로 앞에 -->
+<style>
+  #eulim-avatar-btn{
+    display:inline-flex; flex-direction:column; align-items:center;
+    margin-left:18px; vertical-align:bottom;
+    width:96px; height:104px; position:relative;
+    background:none; border:none; padding:0; cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* 투명 흉상 (배경 없음, 부유) */
+  #eulim-avatar-btn .eab-bust{
+    width:96px; height:86px; object-fit:contain; display:block;
+    position:relative; z-index:1;
+    filter:drop-shadow(0 8px 14px rgba(0,0,0,.28));
+    animation:eab-float 3.4s ease-in-out infinite;
+    transition:transform .25s, filter .25s;
+  }
+
+  /* 바닥 그림자 */
+  #eulim-avatar-btn .eab-shadow{
+    position:absolute; bottom:4px; left:50%;
+    width:52px; height:9px; border-radius:50%;
+    background:rgba(0,0,0,.20); filter:blur(4px);
+    transform:translateX(-50%);
+    animation:eab-shadow 3.4s ease-in-out infinite;
+  }
+
+  @keyframes eab-float{
+    0%,100%{ transform:translateY(0); }
+    50%    { transform:translateY(-8px); }
+  }
+  @keyframes eab-shadow{
+    0%,100%{ transform:translateX(-50%) scale(1);   opacity:.20; }
+    50%    { transform:translateX(-50%) scale(.70); opacity:.10; }
+  }
+
+  /* 호버: 살짝 확대 + 주황 기운 */
+  #eulim-avatar-btn:hover .eab-bust{
+    transform:scale(1.07);
+    filter:drop-shadow(0 10px 18px rgba(240,85,59,.35));
+  }
+  #eulim-avatar-btn:focus-visible{ outline:2px solid #111; outline-offset:4px; }
+
+  @media (max-width:560px){
+    #eulim-avatar-btn{ width:80px; height:88px; margin-left:10px; }
+    #eulim-avatar-btn .eab-bust{ width:80px; height:72px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #eulim-avatar-btn .eab-bust, #eulim-avatar-btn .eab-shadow{ animation:none; }
+  }
+</style>
+
+
+<!-- [C] 스크립트: </body> 바로 앞에 -->
+<script>
+  (function(){
+    var AVATAR_URL = "/avatar/";
+    var b = document.getElementById("eulim-avatar-btn");
+    if(!b) return;
+    b.addEventListener("click", function(){
+      window.open(AVATAR_URL, "_blank", "noopener");
+    });
+    /* 알파 WebM 미지원 브라우저(구형 Safari 등) → 투명 PNG로 자동 교체 */
+    var v = b.querySelector("video");
+    var probe = document.createElement("video");
+    if(!probe.canPlayType || probe.canPlayType('video/webm; codecs="vp9"') === ""){
+      var img = document.createElement("img");
+      img.className = "eab-bust"; img.src = "avatar_bust.png"; img.alt = "eulim AI 아바타";
+      v.replaceWith(img);
+    }
+  })();
+</script>

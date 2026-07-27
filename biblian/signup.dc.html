@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#2B2420"><svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#2B2420"/><text x="600" y="430" text-anchor="middle" fill="#F7F1E7" font-family="serif" font-size="90" font-weight="700" letter-spacing="14">BIBLIAN</text></svg></template>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+/* ===== Biblian mobile responsive ===== */
+@media (max-width:640px){
+  header [style*="grid-template-columns: 1fr auto 1fr"]{display:flex!important;flex-direction:column!important;align-items:center!important;gap:10px!important;padding:12px 16px!important}
+  header nav{order:2;flex-wrap:wrap;justify-content:center;gap:14px!important;font-size:12.5px!important}
+  header nav + a{order:1}
+  header nav + a + div{order:3;justify-content:center!important;gap:18px!important}
+}
+@media (max-width:860px){
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1fr 1.06fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1.05fr .95fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 360px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 400px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 200px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 280px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr auto;"]{grid-template-columns:1fr!important}
+  [style*="padding: 64px 56px"]{padding:40px 26px!important}
+  [style*="padding: 60px 56px"]{padding:38px 24px!important}
+  [style*="padding: 80px 28px"]{padding:52px 22px!important}
+  [style*="padding: 66px 28px"]{padding:44px 22px!important}
+  [style*="padding: 44px 48px"]{padding:30px 26px!important}
+  [style*="font-size: 44px"]{font-size:32px!important}
+}
+@media (max-width:560px){
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:1fr 1fr!important}
+  header nav{gap:13px!important;font-size:12px!important}
+  header [style*="grid-template-columns: 1fr auto 1fr"]{padding-left:16px!important;padding-right:16px!important}
+  [style*="padding: 60px"]{padding:34px 22px!important}
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F1EADD;color:#2B2420;font-family:'Pretendard',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+image-slot{display:block}
+image-slot::part(ring){display:none!important}
+.bl-in{width:100%;height:52px;border:1px solid rgba(60,40,20,.22);border-radius:11px;padding:0 16px;font-size:14.5px;font-family:'Pretendard';color:#2B2420;background:#fff;outline:none}
+.bl-in:focus{border-color:#2B2420}
+.bl-in::placeholder{color:#A89C8E}
+.bl-lb{font-size:12.5px;font-weight:600;color:#4A4038;margin:0 0 7px;display:block}
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100vh;display:flex;flex-direction:column">
+
+<div style="background:#2B2420;color:#EDE4D5;font-size:12px;letter-spacing:.04em;text-align:center;padding:9px 16px;font-weight:500">회원가입 시 5,000원 적립금 · 2개 이상 골라담으면 10% OFF + 사은품 증정</div>
+
+<header style="background:rgba(241,234,221,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(60,40,20,.10)">
+  <div style="max-width:1180px;margin:0 auto;padding:16px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+    <nav style="display:flex;gap:26px;font-size:13.5px;font-weight:600;letter-spacing:.02em;color:#4A4038">
+      <a href="list.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Shop</a><a href="brand.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">About</a><a href="community.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Community</a><a href="giftset.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Set&amp;Gift</a>
+    </nav>
+    <a href="home.dc.html" style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:22px;letter-spacing:.22em;color:#2B2420;text-decoration:none;text-align:center">BIBLIAN</a>
+    <div style="display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:13px;font-weight:600;color:#4A4038">
+      <span style="cursor:pointer">Search</span><a href="login.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Login</a><a href="cart.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Cart (0)</a>
+    </div>
+  </div>
+</header>
+
+<main style="flex:1;display:flex;align-items:flex-start;justify-content:center;padding:52px 24px">
+  <div style="width:100%;max-width:460px">
+    <div style="text-align:center;margin-bottom:32px">
+      <h1 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:26px;margin:0;letter-spacing:-.01em">회원가입</h1>
+      <p style="font-size:13.5px;color:#8D8275;margin:12px 0 0">지금 가입하고 5,000원 적립금을 받아보세요</p>
+    </div>
+
+    <div style="background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:20px;padding:34px 32px;box-shadow:0 20px 44px -28px rgba(60,40,20,.3)">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div>
+          <label class="bl-lb">이름</label>
+          <input class="bl-in" type="text" placeholder="이름을 입력해 주세요">
+        </div>
+        <div>
+          <label class="bl-lb">아이디</label>
+          <div style="display:flex;gap:8px">
+            <input class="bl-in" type="text" placeholder="영문·숫자 4~16자" style="flex:1">
+            <button style="flex:none;padding:0 16px;height:52px;border-radius:11px;background:#F1EADD;border:1px solid rgba(60,40,20,.2);color:#4A4038;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">중복확인</button>
+          </div>
+        </div>
+        <div>
+          <label class="bl-lb">비밀번호</label>
+          <input class="bl-in" type="password" placeholder="영문·숫자·특수문자 조합 8자 이상">
+        </div>
+        <div>
+          <label class="bl-lb">비밀번호 확인</label>
+          <input class="bl-in" type="password" placeholder="비밀번호를 다시 입력해 주세요">
+        </div>
+        <div>
+          <label class="bl-lb">이메일</label>
+          <input class="bl-in" type="email" placeholder="example@biblian.co.kr">
+        </div>
+        <div>
+          <label class="bl-lb">휴대폰 번호</label>
+          <div style="display:flex;gap:8px">
+            <input class="bl-in" type="tel" placeholder="- 없이 입력" style="flex:1">
+            <button style="flex:none;padding:0 16px;height:52px;border-radius:11px;background:#F1EADD;border:1px solid rgba(60,40,20,.2);color:#4A4038;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">인증요청</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- agreements -->
+      <div style="margin-top:24px;border-top:1px solid rgba(60,40,20,.12);padding-top:20px;display:flex;flex-direction:column;gap:12px">
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13.5px;font-weight:600;color:#2B2420">
+          <input type="checkbox" style="width:17px;height:17px;accent-color:#2B2420">전체 동의
+        </label>
+        <div style="height:1px;background:rgba(60,40,20,.08)"></div>
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#6E6357">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#2B2420">[필수] 이용약관 동의
+        </label>
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#6E6357">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#2B2420">[필수] 개인정보 수집·이용 동의
+        </label>
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#6E6357">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#2B2420">[선택] 마케팅 정보 수신 동의 (이메일·SMS)
+        </label>
+      </div>
+
+      <button style="width:100%;height:54px;border-radius:11px;background:#2B2420;color:#F7F1E7;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:24px">가입하기</button>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;font-size:13.5px;color:#6E6357">
+      이미 계정이 있으신가요?
+      <a href="login.dc.html" style="color:#B0502C;font-weight:600;text-decoration:none;margin-left:6px">로그인 →</a>
+    </div>
+  </div>
+</main>
+
+<footer style="background:#EDE4D5;border-top:1px solid rgba(60,40,20,.1);margin-top:56px">
+  <div style="max-width:1180px;margin:0 auto;padding:26px 28px;font-size:11px;color:#A89C8E;line-height:1.7;text-align:center">(주)뷰티앤케이 · 대표 고유리, 최정우 · 사업자등록번호 655-87-00854 · 비블리안 공식 온라인 스토어 All rights reserved</div>
+</footer>
+
+</div>
+</x-dc>
+</body>
+</html>

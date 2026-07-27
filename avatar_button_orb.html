@@ -1,0 +1,90 @@
+<!-- ============================================================
+  eulim AI 아바타 버튼 (원형 · 부유 애니메이션 · '연락하기' 옆 배치)
+
+  사용법:
+  1. avatar_face.png, avatar_button_loop_256.mp4 를
+     사이트 루트(index.html과 같은 위치)에 넣기
+  2. [A] 버튼을 "연락하기" 버튼 코드 바로 뒤에 붙여넣기
+  3. [B] 스타일과 [C] 스크립트는 </body> 바로 앞에 붙여넣기
+  4. 우하단 '위로 가기' 버튼과 충돌 없음
+============================================================ -->
+
+
+<!-- [A] 버튼 본체: "연락하기" 버튼 바로 뒤에 붙여넣기 -->
+<button id="eulim-avatar-btn" type="button" aria-label="AI 아바타에게 물어보기" title="AI 아바타에게 물어보세요">
+  <span class="eab-orb">
+    <video src="avatar_button_loop_256.mp4" autoplay loop muted playsinline
+           poster="avatar_face.png"></video>
+  </span>
+  <span class="eab-shadow"></span>
+</button>
+
+
+<!-- [B] 스타일: </body> 바로 앞에 붙여넣기 -->
+<style>
+  #eulim-avatar-btn{
+    display:inline-flex; flex-direction:column; align-items:center;
+    margin-left:16px; vertical-align:middle;
+    width:64px; height:64px; position:relative;
+    background:none; border:none; padding:0; cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* 동그란 아바타 (부유) */
+  #eulim-avatar-btn .eab-orb{
+    width:56px; height:56px; border-radius:50%; overflow:hidden;
+    position:relative; z-index:1;
+    box-shadow:0 0 0 1px #e5e5e5, 0 10px 22px -8px rgba(0,0,0,.35);
+    animation:eab-float 3.2s ease-in-out infinite;
+    transition:box-shadow .25s;
+  }
+  #eulim-avatar-btn .eab-orb video{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+
+  /* 바닥 그림자 (부유와 반대로 커졌다 작아짐) */
+  #eulim-avatar-btn .eab-shadow{
+    position:absolute; bottom:-2px; left:50%;
+    width:34px; height:7px; border-radius:50%;
+    background:rgba(0,0,0,.18); filter:blur(3px);
+    transform:translateX(-50%);
+    animation:eab-shadow 3.2s ease-in-out infinite;
+  }
+
+  @keyframes eab-float{
+    0%,100%{ transform:translateY(0); }
+    50%    { transform:translateY(-7px); }
+  }
+  @keyframes eab-shadow{
+    0%,100%{ transform:translateX(-50%) scale(1);   opacity:.18; }
+    50%    { transform:translateX(-50%) scale(.72); opacity:.10; }
+  }
+
+  /* 호버: 살짝 커지고 주황 링 */
+  #eulim-avatar-btn:hover .eab-orb{
+    box-shadow:0 0 0 2px #f0553b, 0 14px 26px -8px rgba(0,0,0,.4);
+  }
+  #eulim-avatar-btn:focus-visible .eab-orb{
+    box-shadow:0 0 0 2px #111, 0 10px 22px -8px rgba(0,0,0,.35);
+  }
+
+  @media (max-width:560px){
+    #eulim-avatar-btn{ margin-left:10px; width:56px; height:56px; }
+    #eulim-avatar-btn .eab-orb{ width:48px; height:48px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #eulim-avatar-btn .eab-orb, #eulim-avatar-btn .eab-shadow{ animation:none; }
+  }
+</style>
+
+
+<!-- [C] 스크립트: </body> 바로 앞에 붙여넣기 -->
+<script>
+  (function(){
+    var AVATAR_URL = "/avatar/";   /* 아바타 페이지 주소 */
+    var b = document.getElementById("eulim-avatar-btn");
+    if(b) b.addEventListener("click", function(){
+      window.open(AVATAR_URL, "_blank", "noopener");
+    });
+  })();
+</script>

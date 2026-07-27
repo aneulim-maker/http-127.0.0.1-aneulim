@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eulim portfolio</title>
+<!-- 링크 공유 미리보기 (Open Graph) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="eulim 포트폴리오 · history & AI" />
+<meta property="og:description" content="교육 콘텐츠 · 에듀테크 서비스 기획자. 궤도 · 타임라인 · 룩북으로 만나는 인터랙티브 포트폴리오." />
+<meta property="og:image" content="https://eulim.vercel.app/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://eulim.vercel.app/portfolio.dc.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://eulim.vercel.app/og-image.jpg" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:#000;}
+  body{font-family:'Pretendard',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  ::selection{background:rgba(255,255,255,.85);color:#000;}
+  ::-webkit-scrollbar{width:0;height:0;}
+  @keyframes glowpulse{0%,100%{opacity:.92;transform:scale(1);}50%{opacity:1;transform:scale(1.025);}}
+  @keyframes cuemove{0%{transform:translateY(0);opacity:.5;}50%{transform:translateY(7px);opacity:1;}100%{transform:translateY(0);opacity:.5;}}
+  @keyframes entryOrbit{from{opacity:0;transform:scale(.82);}to{opacity:1;transform:scale(1);}}
+  @keyframes eLogoPulse{
+    0%,100%{filter:drop-shadow(0 0 24px rgba(0,225,242,0.78)) drop-shadow(0 0 8px rgba(0,200,230,0.5)) drop-shadow(8px 18px 32px rgba(0,6,18,0.95));}
+    50%    {filter:drop-shadow(0 0 46px rgba(0,238,255,1))    drop-shadow(0 0 22px rgba(0,215,240,0.8)) drop-shadow(8px 18px 32px rgba(0,6,18,0.95));}
+  }
+  @keyframes eTextFade{
+    0%  {opacity:0;transform:translateY(20px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+  .close-e-logo{opacity:0;}
+  .close-text{opacity:0;}
+  .close-email{opacity:0;}
+  .nav-btn{transition:background .2s,color .2s;}
+  .nav-btn:hover{background:#ffffff !important;color:#0a0a0a !important;}
+  .nav-link{transition:background .2s,color .2s;}
+  .nav-link:hover{background:#ffffff !important;color:#0a0a0a !important;}
+  @media (max-width:760px){
+    .m-brand{top:16px !important;left:16px !important;font-size:11px !important;letter-spacing:.2em !important;}
+    .m-switcher{top:12px !important;right:0 !important;left:0 !important;margin:0 12px !important;padding:4px !important;gap:2px !important;overflow-x:auto !important;scrollbar-width:none !important;-webkit-overflow-scrolling:touch !important;justify-content:flex-start !important;}
+    .m-switcher::-webkit-scrollbar{display:none !important;}
+    .m-switcher button,.m-switcher .nav-btn{padding:7px 11px !important;font-size:11px !important;}
+    .m-switcher a,.m-switcher .nav-link{padding:7px 10px !important;font-size:11px !important;}
+    .hero-sub{margin-top:28px !important;}
+    .orbit-wrap{width:min(84vmin,420px) !important;height:min(84vmin,420px) !important;}
+    .m-sec{padding-left:18px !important;padding-right:18px !important;padding-top:104px !important;}
+    .m-tlrail{padding-left:60px !important;}
+    .m-tlspine{left:20px !important;}
+    .m-tlnode{left:-60px !important;width:46px !important;height:46px !important;}
+    .m-tlnode>div:last-child{width:46px !important;height:46px !important;font-size:13px !important;}
+    .m-tlcard{padding:15px 16px !important;}
+  }
+  @media (min-width:761px) and (max-width:1024px){
+    .m-sec{padding-left:36px !important;padding-right:36px !important;padding-top:116px !important;}
+    .m-switcher{top:18px !important;right:18px !important;}
+    .m-brand{top:22px !important;left:22px !important;}
+    .m-tlrail{padding-left:88px !important;}
+    .m-tlnode{left:-88px !important;}
+  }
+  @media (max-width:900px){
+    .m-lbrow{flex-direction:column !important;gap:24px !important;align-items:stretch !important;}
+    .m-lbimg,.m-lbtxt{flex:1 1 auto !important;min-width:0 !important;width:100% !important;}
+  }
+</style>
+</head>
+<body>
+<div id="app" style="background:linear-gradient(160deg,#000820 0%,#010b28 50%,#000818 100%);color:#fff;position:relative;overflow-x:clip">
+
+  <!-- NAV -->
+  <div class="m-switcher" style="position:fixed;top:22px;right:22px;z-index:60;display:flex;gap:5px;padding:5px;border-radius:999px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12)">
+    <button class="nav-btn" onclick="onOrbit()" style="border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px;letter-spacing:.02em;padding:8px 15px;border-radius:999px;white-space:nowrap;background:transparent;color:rgba(255,255,255,.65)">메인</button>
+    <button class="nav-btn" onclick="onTimeline()" style="border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px;letter-spacing:.02em;padding:8px 15px;border-radius:999px;white-space:nowrap;background:transparent;color:rgba(255,255,255,.65)">history</button>
+    <button class="nav-btn" onclick="onEditorial()" style="border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px;letter-spacing:.02em;padding:8px 15px;border-radius:999px;white-space:nowrap;background:transparent;color:rgba(255,255,255,.65)">lookbook</button>
+    <a class="nav-link" href="https://drive.google.com/drive/folders/1vYmvsDSWxCvid7ThSuYe0SDj4e29AtrZ?usp=sharing" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:5px;text-decoration:none;font-family:inherit;font-weight:600;font-size:12px;letter-spacing:.02em;padding:8px 15px;border-radius:999px;white-space:nowrap;background:transparent;color:rgba(255,255,255,.65)">work<span style="font-size:10px;opacity:.7">↗</span></a>
+    <a class="nav-link" href="biblian/home.dc.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:5px;text-decoration:none;font-family:inherit;font-weight:600;font-size:12px;letter-spacing:.02em;padding:8px 15px;border-radius:999px;white-space:nowrap;background:transparent;color:rgba(255,255,255,.65)">commerce<span style="font-size:10px;opacity:.7">↗</span></a>
+  </div>
+
+  <div class="m-brand" style="position:fixed;top:26px;left:26px;z-index:60;font-size:13px;letter-spacing:.32em;font-weight:600;color:rgba(255,255,255,.55)">EULIM</div>
+
+  <button onclick="scrollTopBtn()" aria-label="맨 위로 가기" style="position:fixed;bottom:26px;right:26px;z-index:60;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .25s,border-color .25s">↑</button>
+
+  <!-- HERO -->
+  <section style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:72px 24px;scroll-snap-align:start">
+    <div class="orbit-wrap" style="position:relative;width:min(92vmin,660px);height:min(92vmin,660px);display:flex;align-items:center;justify-content:center;animation:entryOrbit .9s cubic-bezier(.2,0,.1,1) .2s both">
+      <svg id="orbitSvg" viewBox="-290 -290 580 580" style="width:100%;height:100%;overflow:visible" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="ogSphere" cx="42%" cy="32%" r="72%">
+            <stop offset="0%"   stop-color="#c8d2de"/>
+            <stop offset="22%"  stop-color="#6878a0"/>
+            <stop offset="52%"  stop-color="#1e2850"/>
+            <stop offset="78%"  stop-color="#0c1228"/>
+            <stop offset="100%" stop-color="#060810"/>
+          </radialGradient>
+          <radialGradient id="bgAura" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#152848" stop-opacity="0.60"/>
+            <stop offset="45%"  stop-color="#0a1230" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="#050810" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="edgeGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="58%"  stop-color="rgba(160,200,230,0)"/>
+            <stop offset="82%"  stop-color="rgba(160,195,225,0.14)"/>
+            <stop offset="100%" stop-color="rgba(140,180,220,0)"/>
+          </radialGradient>
+          <filter id="shardGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="ogBloom" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="14" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="borderGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <clipPath id="sphereClip">
+            <circle cx="0" cy="0" r="140"/>
+          </clipPath>
+        </defs>
+        <circle cx="0" cy="0" r="285" fill="url(#bgAura)" style="animation:glowpulse 4s ease-in-out infinite"/>
+        <circle cx="0" cy="0" r="205" fill="none" stroke="rgba(160,185,210,0.09)" stroke-width="1"/>
+        <circle cx="0" cy="0" r="268" fill="none" stroke="rgba(150,175,205,0.05)" stroke-width="1"/>
+        <ellipse cx="0" cy="0" rx="175" ry="166" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.6" stroke-dasharray="3,8"/>
+        <ellipse cx="0" cy="0" rx="212" ry="194" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.6" stroke-dasharray="3,8"/>
+        <ellipse cx="0" cy="0" rx="250" ry="242" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.6" stroke-dasharray="3,8"/>
+        <g id="riseLines" filter="url(#shardGlow)"></g>
+        <circle cx="0" cy="0" r="168" fill="url(#edgeGlow)"/>
+        <circle cx="0" cy="0" r="140" fill="url(#ogSphere)" filter="url(#ogBloom)"/>
+        <g clip-path="url(#sphereClip)" fill="none" stroke="#8aacc8" stroke-width="0.65" stroke-opacity="0.18">
+          <ellipse cx="0" cy="-75" rx="118" ry="17"/>
+          <ellipse cx="0" cy="-32" rx="136" ry="20"/>
+          <ellipse cx="0" cy="16"  rx="139" ry="21"/>
+          <ellipse cx="0" cy="65"  rx="124" ry="18"/>
+          <ellipse cx="0" cy="108" rx="84"  ry="13"/>
+          <ellipse cx="0" cy="0" rx="18" ry="140"/>
+          <ellipse cx="0" cy="0" rx="18" ry="140" transform="rotate(36)"/>
+          <ellipse cx="0" cy="0" rx="18" ry="140" transform="rotate(72)"/>
+          <ellipse cx="0" cy="0" rx="18" ry="140" transform="rotate(108)"/>
+          <ellipse cx="0" cy="0" rx="18" ry="140" transform="rotate(144)"/>
+        </g>
+        <circle cx="0" cy="0" r="140" fill="none" stroke="rgba(150,190,220,0.45)" stroke-width="1.3" filter="url(#borderGlow)"/>
+        <circle cx="0" cy="0" r="140" fill="none" stroke="rgba(160,200,225,0.22)" stroke-width="1"/>
+        <ellipse cx="-32" cy="-40" rx="42" ry="26" fill="rgba(180,225,255,0.16)" transform="rotate(-22,-32,-40)"/>
+        <text x="0" y="14" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="38" font-weight="700" letter-spacing="0.5" fill="rgba(255,255,255,0.96)">eulim</text>
+        <text x="0" y="40" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="8.5" font-weight="500" letter-spacing="5.5" fill="rgba(180,200,220,0.75)">PORTFOLIO</text>
+        <g id="orbitNodes"></g>
+      </svg>
+    </div>
+    <div class="hero-sub" style="margin-top:52px;text-align:center;animation:entryOrbit .7s cubic-bezier(.2,0,.1,1) .75s both">
+      <div style="font-size:clamp(17px,2.4vw,22px);font-weight:600;color:#fff;letter-spacing:-.01em">교육 콘텐츠 · 에듀테크 서비스 기획자</div>
+      <div style="margin-top:12px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.5)">사람과 기술을 잇는 학습 경험을 설계합니다</div>
+    </div>
+    <div style="position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.5)">
+      <span style="font-size:11px;letter-spacing:.3em">SCROLL</span>
+      <span style="font-size:16px;animation:cuemove 1.8s ease-in-out infinite">↓</span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px;scroll-snap-align:start">
+    <div style="width:min(720px,100%)">
+      <div data-reveal style="font-size:12px;letter-spacing:.4em;color:rgba(255,255,255,.4);font-weight:600">ABOUT</div>
+      <p data-reveal style="margin-top:28px;font-size:clamp(20px,3vw,30px);line-height:1.7;font-weight:500;color:#fff;letter-spacing:-.01em">학습자의 경험에서 출발해<br/>교육의 <span style="color:rgba(255,255,255,.55)">전 과정을 설계</span>합니다.</p>
+      <p data-reveal style="margin-top:30px;font-size:clamp(15px,1.7vw,17px);line-height:1.9;color:rgba(255,255,255,.55);max-width:600px">콘텐츠 기획부터 플랫폼·LMS 설계, 고객 컨설팅, 그리고 AI·에듀테크 서비스까지. 문제를 정의하고 사람들 사이를 잇는 기획자입니다.</p>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE intro -->
+  <section style="min-height:60vh;display:flex;align-items:center;justify-content:center;padding:90px 24px 30px;scroll-snap-align:start">
+    <div style="width:min(880px,100%);text-align:center">
+      <div data-reveal style="font-size:12px;letter-spacing:.4em;color:rgba(255,255,255,.4);font-weight:600">EXPERIENCE</div>
+      <h2 data-reveal style="margin-top:22px;font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;letter-spacing:-.02em">경력을 하나하나 소개합니다</h2>
+    </div>
+  </section>
+
+  <!-- MODE A: ORBIT (career cards) -->
+  <div id="section-orbit"></div>
+
+  <!-- MODE B: TIMELINE -->
+  <div id="section-timeline" style="display:none"></div>
+
+  <!-- MODE C: EDITORIAL (lookbook) -->
+  <div id="section-editorial" style="display:none"></div>
+
+  <!-- CLOSING -->
+  <section style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 24px;scroll-snap-align:start">
+    <div class="close-logo-wrap" style="display:flex;flex-direction:column;align-items:center;gap:48px">
+
+      <!-- True isometric 3D E 로고 — JS가 프레임별로 지오메트리 생성 (buildELogo)
+           투영: X=(u-v)·A, Y=(u+v)·B - z·S  /  A=S√3/2, B=S/2, S=26
+           애니메이션: 플랫 E가 공중에 살짝 떠 있다가(gap) 위로 상승, 아래에서 베이스 큐브가 자라며 결합 -->
+      <svg id="closeELogo" class="close-e-logo" viewBox="145 125 470 590" style="width:min(40vmin,230px);height:auto;overflow:visible" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <!-- 텍스트 (서서히 등장) -->
+      <div>
+        <h2 class="close-text" style="font-size:clamp(22px,3.4vw,34px);font-weight:700;color:#fff;letter-spacing:-.02em">함께 성장할 준비가 되어 있습니다</h2>
+        <div class="close-email" style="margin-top:22px;font-size:14px;color:rgba(255,255,255,.55)">이메일 — biblical@naver.com</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ── 데이터 정의 ── */
+var careers = [
+  { num: '01', tag: 'CONTENT', title: '교육 콘텐츠 기획', desc: '학습자 경험을 중심으로 온·오프라인 교육 콘텐츠를 기획·설계했습니다. 커리큘럼 구성부터 운영까지 전 과정을 담당했습니다.' },
+  { num: '02', tag: 'PLATFORM', title: '교육 플랫폼 · LMS 기획', desc: '학습관리시스템(LMS)과 교육 플랫폼의 핵심 기능을 정의하고, 사용자 흐름과 화면 구조를 설계했습니다.' },
+  { num: '03', tag: 'CONSULTING', title: '고객 응대 및 컨설팅', desc: '고객의 니즈를 깊이 듣고, 상황에 맞는 최적의 학습 솔루션을 제안하는 응대·컨설팅을 수행했습니다.' },
+  { num: '04', tag: 'COMMUNICATION', title: '문제해결 · 커뮤니케이션', desc: '현업 부서와 개발팀 사이를 잇는 가교 역할로, 문제를 명확히 정의하고 함께 풀어냈습니다.' },
+  { num: '05', tag: 'AI · EDUTECH', title: 'AI · 에듀테크 서비스 기획', desc: 'AI 기반 학습 도구와 에듀테크 서비스를 기획하며 새로운 학습 경험을 설계한 경험이 있습니다.' },
+];
+
+var proj = [
+  { year:'2004', title:'LMS 시스템 기획·운영 (SCORM 도입)', period:'2004.03 ~ 2004.10', client:'대교', company:'대교', role:'총괄 PM (기획)', note:'' },
+  { year:'2005', title:'통합 LMS 업그레이드 구축', period:'2005.03 ~ 2005.10', client:'대교', company:'대교', role:'총괄 PM (기획)', note:'' },
+  { year:'2007', title:'e-HRD 시스템 구축 (학점이수제 도입)', period:'2007.01 ~ 2007.08', client:'대교', company:'대교', role:'총괄 PM (기획)', note:'' },
+  { year:'2009', title:'전사 역량진단 시스템 구축·역량도출', period:'2009.10 ~ 2010.02', client:'대교', company:'대교', role:'총괄 PM (기획)', note:'' },
+  { year:'2013', title:'방송통신중·고등학교 콘텐츠 개발·기획', period:'2013.12 ~ 2014.03', client:'덕윤산업', company:'덕윤산업', role:'총괄 PM (기획)', note:'' },
+  { year:'2014', title:'방송통신고등학교 콘텐츠 개발·기획', period:'2014.02 ~ 2015.06', client:'에듀윌', company:'프리랜서', role:'총괄 PM (기획)', note:'' },
+  { year:'2016', title:'성과주의경영 콘텐츠 개발', period:'2016.02 ~ 2016.09', client:'동부', company:'프리랜서', role:'총괄 PM (기획)', note:'' },
+  { year:'2017', title:'메가 HRD 사이트 유지보수·업그레이드', period:'2017.02 ~ 2019.10', client:'메가넥스트', company:'메가넥스트', role:'총괄 PM (기획)', note:'' },
+  { year:'2018', title:'근로자카드 사이트 구축', period:'2018.02 ~ 2018.10', client:'메가넥스트', company:'메가넥스트', role:'총괄 PM (기획)', note:'' },
+  { year:'2018', title:'한국후지제록스 e-HRD 시스템 구축', period:'2018.07 ~ 2018.12', client:'한국후지제록스', company:'메가넥스트', role:'총괄 PM (기획)', note:'' },
+  { year:'2019', title:'DGIST e-HRD 시스템 구축', period:'2019.10 ~ 2020.03', client:'DGIST', company:'포도소프트웨어', role:'총괄 PM (기획)', note:'' },
+  { year:'2020', title:'서부발전 e-HRD 시스템 구축', period:'2020.06 ~ 2020.12', client:'서부발전', company:'포도소프트웨어', role:'총괄 PM (기획)', note:'' },
+  { year:'2020', title:'농협 교육정보시스템 재구축', period:'2020.12 ~ 2021.11', client:'농협', company:'포도소프트웨어', role:'기획 (UI/UX)', note:'' },
+  { year:'2021', title:'한국기술대학교 재구축', period:'2021.12 ~ 2022.02', client:'한국기술대', company:'포도소프트웨어', role:'기획 (UI/UX)', note:'' },
+  { year:'2022', title:'삼일회계법인 재구축', period:'2022.02 ~ 2022.05', client:'삼일회계', company:'포도소프트웨어', role:'기획', note:'' },
+  { year:'2022', title:'한국능률협회 KMA 사이트 재구축', period:'2022.06 ~ 2022.12', client:'KMA', company:'포도소프트웨어', role:'PM (UI/UX 리뉴얼)', note:'지디웹 웹부문 수상 · WINNER PRIZE' },
+  { year:'2022', title:'현대자동차 e-HRD 구축', period:'2022.07 ~ 2022.11', client:'현대NGV', company:'포도소프트웨어', role:'기획', note:'' },
+  { year:'2023', title:'숭실대 AI-codi', period:'2023.01 ~ 2023.03', client:'한화', company:'포도소프트웨어', role:'분석·기획', note:'' },
+  { year:'2023', title:'학습분석 플랫폼', period:'2023.05 ~ 2023.10', client:'백석대학교', company:'메디오피아테크', role:'분석·기획', note:'신규사업 개발' },
+  { year:'2023', title:'AI 번역 서비스', period:'2023.10 ~ 2023.12', client:'동국대학교', company:'메디오피아테크', role:'분석·기획', note:'신규사업 개발' },
+  { year:'2024', title:'연세의대 교육시스템', period:'2024.04 ~ 2025.04', client:'연세의과대학', company:'메디오피아테크', role:'분석·기획', note:'신규사업 개발' },
+  { year:'2025', title:'메타버스 AI 가상역사토크', period:'2025.11 ~ 2026.03', client:'NIPA', company:'단꿈아이', role:'기획 / PM', note:'신규 AI · 설민석 페르소나' },
+  { year:'2025', title:'교육 콘텐츠 운영', period:'2025.11 ~ 2026.06', client:'단꿈아이', company:'단꿈아이', role:'기획·운영 (PM)', note:'신규사업 개발' },
+  { year:'2025', title:'CS 고객만족센터 운영', period:'2025.11 ~ 2026.06', client:'단꿈아이', company:'단꿈아이', role:'기획·운영 (PM)', note:'신규사업 개발' },
+  { year:'2025', title:'시스템 고도화 기획', period:'2025.11 ~ 2026.06', client:'단꿈아이', company:'단꿈아이', role:'기획·운영 (PM)', note:'신규사업 개발' },
+];
+
+/* ── SVG 썸네일 생성 ── */
+function star(x, y, r, op) {
+  return '<g stroke="#fff" stroke-opacity="'+op+'" stroke-width="1" stroke-linecap="round">'
+    +'<line x1="'+(x-r)+'" y1="'+y+'" x2="'+(x+r)+'" y2="'+y+'"/>'
+    +'<line x1="'+x+'" y1="'+(y-r)+'" x2="'+x+'" y2="'+(y+r)+'"/>'
+    +'<line x1="'+(x-r*0.5)+'" y1="'+(y-r*0.5)+'" x2="'+(x+r*0.5)+'" y2="'+(y+r*0.5)+'"/>'
+    +'<line x1="'+(x+r*0.5)+'" y1="'+(y-r*0.5)+'" x2="'+(x-r*0.5)+'" y2="'+(y+r*0.5)+'"/></g>';
+}
+
+var celestial = '<g fill="none" stroke="#fff" stroke-width="1">'
+  +'<circle cx="240" cy="180" r="158" stroke-opacity="0.05"/>'
+  +'<circle cx="240" cy="180" r="128" stroke-opacity="0.07"/>'
+  +'<circle cx="240" cy="180" r="98" stroke-opacity="0.06"/>'
+  +'<ellipse cx="240" cy="180" rx="150" ry="92" stroke-opacity="0.05" transform="rotate(18 240 180)"/>'
+  +'<ellipse cx="240" cy="180" rx="150" ry="92" stroke-opacity="0.04" transform="rotate(-22 240 180)"/>'
+  +'</g>'
+  +'<g fill="#fff">'
+  +'<circle cx="78" cy="70" r="1.1" fill-opacity="0.4"/><circle cx="410" cy="92" r="1" fill-opacity="0.35"/>'
+  +'<circle cx="120" cy="300" r="1.2" fill-opacity="0.4"/><circle cx="386" cy="286" r="1" fill-opacity="0.3"/>'
+  +'<circle cx="44" cy="190" r="1" fill-opacity="0.3"/><circle cx="440" cy="200" r="1.1" fill-opacity="0.35"/>'
+  +'<circle cx="300" cy="54" r="0.9" fill-opacity="0.3"/><circle cx="180" cy="320" r="0.9" fill-opacity="0.3"/></g>'
+  +star(96,250,6,0.4)+star(398,130,5,0.35)+star(150,110,4,0.3);
+
+function svgFrame(inner) {
+  return 'data:image/svg+xml,'+encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360">'
+    +'<defs>'
+    +'<linearGradient id="bg" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#0f0f13"/><stop offset="1" stop-color="#060608"/></linearGradient>'
+    +'<radialGradient id="vg" cx="50%" cy="48%" r="74%"><stop offset="58%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0.45"/></radialGradient>'
+    +'<pattern id="tx" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.6" fill="#ffffff" fill-opacity="0.03"/></pattern>'
+    +'</defs>'
+    +'<rect width="480" height="360" fill="url(#bg)"/>'
+    +'<rect width="480" height="360" fill="url(#tx)"/>'
+    +celestial+inner
+    +'<rect width="480" height="360" fill="url(#vg)"/>'
+    +'</svg>');
+}
+
+var LN = 'fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"';
+var scenes = {
+  dashboard: '<g '+LN+' stroke-opacity="0.5" stroke-width="1.4"><path d="M186 132 V228 H300"/></g>'
+    +'<g '+LN+' stroke-opacity="0.85" stroke-width="1.6"><path d="M192 214 L216 196 L240 204 L266 168 L292 150"/></g>'
+    +'<g fill="#0b0b0f" stroke="#fff" stroke-opacity="0.85" stroke-width="1.4"><circle cx="216" cy="196" r="3.2"/><circle cx="240" cy="204" r="3.2"/><circle cx="266" cy="168" r="3.2"/></g>'
+    +star(292,150,7,0.95),
+  ehrd: '<g '+LN+' stroke-opacity="0.5" stroke-width="1.4"><path d="M240 146 V166 M196 196 H284 M196 196 V210 M240 196 V210 M284 196 V210"/></g>'
+    +'<g fill="#0b0b0f" stroke="#fff" stroke-width="1.5" stroke-opacity="0.85"><circle cx="240" cy="142" r="9"/></g>'
+    +'<g fill="#0b0b0f" stroke="#fff" stroke-width="1.4" stroke-opacity="0.6"><circle cx="196" cy="220" r="8"/><circle cx="240" cy="220" r="8"/><circle cx="284" cy="220" r="8"/></g>',
+  content: '<g '+LN+' stroke-opacity="0.7" stroke-width="1.5"><circle cx="232" cy="180" r="34"/><path d="M224 166 L250 180 L224 194 Z"/></g>'
+    +'<g '+LN+' stroke-opacity="0.4" stroke-width="1.3"><rect x="284" y="150" width="42" height="28" rx="4"/><rect x="284" y="186" width="42" height="28" rx="4"/></g>',
+  web: '<g '+LN+' stroke-opacity="0.6" stroke-width="1.5"><rect x="180" y="138" width="120" height="84" rx="6"/><path d="M180 156 H300"/></g>'
+    +'<g fill="#fff" fill-opacity="0.45"><circle cx="190" cy="147" r="1.6"/><circle cx="197" cy="147" r="1.6"/><circle cx="204" cy="147" r="1.6"/></g>'
+    +'<g '+LN+' stroke-opacity="0.35" stroke-width="1.3"><rect x="190" y="166" width="48" height="46" rx="3"/><path d="M248 170 H290 M248 182 H290 M248 194 H276"/></g>',
+  ai: '<g '+LN+' stroke-opacity="0.3" stroke-width="1.1"><path d="M240 180 L198 144 M240 180 L286 150 M240 180 L196 216 M240 180 L284 214 M240 180 L240 134 M240 180 L300 188"/></g>'
+    +'<g fill="#0b0b0f" stroke="#fff" stroke-width="1.3" stroke-opacity="0.6"><circle cx="198" cy="144" r="4.5"/><circle cx="286" cy="150" r="4.5"/><circle cx="196" cy="216" r="4.5"/><circle cx="284" cy="214" r="4.5"/><circle cx="240" cy="134" r="4.5"/><circle cx="300" cy="188" r="4.5"/></g>'
+    +star(240,180,11,0.95),
+  cs: '<g '+LN+' stroke-opacity="0.7" stroke-width="1.5"><path d="M196 152 h74 a12 12 0 0 1 12 12 v26 a12 12 0 0 1 -12 12 h-34 l-20 16 v-16 h-20 a12 12 0 0 1 -12 -12 v-26 a12 12 0 0 1 12 -12 z"/></g>'
+    +'<g fill="#fff" fill-opacity="0.6"><circle cx="216" cy="177" r="2.4"/><circle cx="234" cy="177" r="2.4"/><circle cx="252" cy="177" r="2.4"/></g>'
+    +star(296,150,6,0.6),
+};
+
+var sceneTypes = ['dashboard','dashboard','ehrd','ehrd','content','content','content','web','web','ehrd','ehrd','ehrd','web','web','web','web','ehrd','ai','ai','ai','dashboard','ai','content','cs','dashboard'];
+
+function imgSrc(i) { return svgFrame(scenes[sceneTypes[i]] || scenes.dashboard); }
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── MODE 전환 ── */
+var currentMode = 'orbit';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('section-orbit').style.display = mode === 'orbit' ? '' : 'none';
+  document.getElementById('section-timeline').style.display = mode === 'timeline' ? '' : 'none';
+  document.getElementById('section-editorial').style.display = mode === 'editorial' ? '' : 'none';
+}
+
+function scrollToTop() {
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function onOrbit() {
+  var wasOrbit = currentMode === 'orbit';
+  setMode('orbit');
+  if (!wasOrbit) { scrollToTop(); return; }
+  var card = document.querySelector('.career-card');
+  if (card) card.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function onTimeline() {
+  setMode('timeline');
+  /* CAREER TIMELINE 헤더 위치로 스크롤 */
+  setTimeout(function() {
+    var sec = document.getElementById('section-timeline');
+    if (sec) {
+      var top = sec.getBoundingClientRect().top + (document.scrollingElement||document.documentElement).scrollTop;
+      window.scrollTo({top: Math.max(0, top - 80), behavior:'smooth'});
+    }
+  }, 60);
+}
+
+function onEditorial() {
+  setMode('editorial');
+  /* PORTFOLIO LOOKBOOK 헤더 위치로 스크롤 */
+  setTimeout(function() {
+    var sec = document.getElementById('section-editorial');
+    if (sec) {
+      var top = sec.getBoundingClientRect().top + (document.scrollingElement||document.documentElement).scrollTop;
+      window.scrollTo({top: Math.max(0, top - 80), behavior:'smooth'});
+    }
+  }, 60);
+}
+
+function scrollTopBtn() { scrollToTop(); }
+
+/* ── 렌더: 경력 카드 (ORBIT) ── */
+function renderCareers() {
+  var html = '';
+  careers.forEach(function(c) {
+    html += '<section class="career-card" style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:90px 24px;scroll-snap-align:center">'
+      +'<div data-reveal>'
+      +'<div style="position:relative;width:130px;height:130px;margin:0 auto;display:flex;align-items:center;justify-content:center">'
+      +'<div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 70%);filter:blur(10px)"></div>'
+      +'<div style="position:relative;width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#fff,#ececf1);color:#0c0c0c;font-weight:700;font-size:32px">'+esc(c.num)+'</div>'
+      +'</div>'
+      +'<div style="margin-top:36px;font-size:12px;letter-spacing:.32em;color:rgba(255,255,255,.42);font-weight:600">'+esc(c.tag)+'</div>'
+      +'<h3 style="margin-top:14px;font-size:clamp(25px,4vw,42px);font-weight:700;color:#fff;letter-spacing:-.02em">'+esc(c.title)+'</h3>'
+      +'<p style="margin:22px auto 0;max-width:600px;font-size:clamp(15px,1.7vw,18px);line-height:1.85;color:rgba(255,255,255,.58)">'+esc(c.desc)+'</p>'
+      +'</div></section>';
+  });
+  document.getElementById('section-orbit').innerHTML = html;
+  setupReveal(document.querySelectorAll('#section-orbit [data-reveal]'));
+}
+
+/* ── 렌더: 타임라인 ── */
+function renderTimeline() {
+  var timelineYears = [];
+  proj.forEach(function(p) {
+    var org = p.client === p.company ? p.client : p.client + ' · ' + p.company;
+    var last = timelineYears[timelineYears.length-1];
+    var item = {title:p.title, period:p.period, org:org, role:p.role, note:p.note};
+    if (last && last.year === p.year) last.items.push(item);
+    else timelineYears.push({year:p.year, items:[item]});
+  });
+
+  var html = '<section class="m-sec" style="display:flex;flex-direction:column;align-items:center;padding:130px 24px 80px">'
+    +'<div style="width:min(860px,100%);text-align:center;margin-bottom:64px">'
+    +'<div style="font-size:12px;letter-spacing:.4em;color:rgba(255,255,255,.4);font-weight:600">CAREER TIMELINE</div>'
+    +'<h2 style="margin-top:18px;font-size:clamp(24px,3.6vw,38px);font-weight:700;color:#fff;letter-spacing:-.02em">2004 — 2026, 기획자의 궤적</h2>'
+    +'<div style="margin-top:14px;font-size:14px;color:rgba(255,255,255,.5)">LMS · e-HRD · 콘텐츠 · AI 에듀테크까지, 25개 프로젝트를 총괄해 온 여정</div>'
+    +'</div>'
+    +'<div class="m-tlrail" style="width:min(860px,100%);position:relative;padding-left:98px">'
+    +'<div class="m-tlspine" style="position:absolute;left:35px;top:8px;bottom:8px;width:1.5px;background:linear-gradient(rgba(255,255,255,.03),rgba(255,255,255,.20),rgba(255,255,255,.03))"></div>';
+
+  timelineYears.forEach(function(yr) {
+    html += '<div style="position:relative;margin-bottom:52px">'
+      +'<div class="m-tlnode" style="position:absolute;left:-98px;top:-4px;width:72px;height:72px;display:flex;align-items:center;justify-content:center">'
+      +'<div style="position:absolute;inset:-7px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 70%);filter:blur(9px)"></div>'
+      +'<div style="position:relative;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#fff,#e6e6ee);display:flex;align-items:center;justify-content:center;color:#0c0c0c;font-weight:700;font-size:18px;letter-spacing:-.02em">'+esc(yr.year)+'</div>'
+      +'</div>';
+
+    yr.items.forEach(function(it) {
+      html += '<div class="m-tlcard" style="margin-bottom:18px;padding:18px 22px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:14px">'
+        +'<div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap">'
+        +'<h3 style="font-size:clamp(16px,2vw,20px);font-weight:600;color:#fff;letter-spacing:-.01em">'+esc(it.title)+'</h3>'
+        +'<span style="font-size:12px;color:rgba(255,255,255,.42);font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.01em">'+esc(it.period)+'</span>'
+        +'</div>'
+        +'<div style="margin-top:11px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">'
+        +'<span style="font-size:13px;color:rgba(255,255,255,.6)">'+esc(it.org)+'</span>'
+        +'<span style="padding:3px 11px;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:11px;font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.78);white-space:nowrap">'+esc(it.role)+'</span>'
+        +'</div>'
+        +(it.note ? '<div style="margin-top:11px;display:inline-flex;align-items:center;gap:7px;font-size:12px;color:rgba(245,225,170,.9);letter-spacing:.01em"><span style="width:5px;height:5px;border-radius:50%;background:rgba(245,225,170,.9);display:inline-block"></span>'+esc(it.note)+'</div>' : '')
+        +'</div>';
+    });
+
+    html += '</div>';
+  });
+
+  html += '</div></section>';
+  document.getElementById('section-timeline').innerHTML = html;
+}
+
+/* ── 렌더: 룩북 ── */
+function renderLookbook() {
+  var html = '<section class="m-sec" style="display:flex;flex-direction:column;align-items:center;padding:130px 24px 90px">'
+    +'<div style="width:min(1040px,100%);text-align:center;margin-bottom:80px">'
+    +'<div style="font-size:12px;letter-spacing:.4em;color:rgba(255,255,255,.4);font-weight:600">PORTFOLIO LOOKBOOK</div>'
+    +'<h2 style="margin-top:18px;font-size:clamp(26px,4vw,44px);font-weight:700;color:#fff;letter-spacing:-.02em">기획자의 작업, 한 장 한 장</h2>'
+    +'<div style="margin-top:14px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.5)">각 프로젝트 이미지를 끌어다 놓아 나만의 룩북을 완성하세요</div>'
+    +'</div>'
+    +'<div style="width:min(1040px,100%);display:flex;flex-direction:column;gap:clamp(64px,8vw,108px)">';
+
+  proj.forEach(function(p, i) {
+    var num = String(i+1).padStart(2,'0');
+    var org = p.client === p.company ? p.client : p.client + ' · ' + p.company;
+    var dir = i % 2 === 0 ? 'row' : 'row-reverse';
+    var src = imgSrc(i);
+
+    html += '<div class="m-lbrow" style="display:flex;gap:clamp(28px,4vw,64px);align-items:center;flex-wrap:wrap;flex-direction:'+dir+'">'
+      +'<div class="m-lbimg" style="flex:1.55 1 480px;min-width:320px;position:relative">'
+      +'<div style="position:absolute;inset:-16px;border-radius:26px;background:radial-gradient(120% 120% at 50% 28%,rgba(255,255,255,.08),rgba(255,255,255,0) 70%);filter:blur(7px);pointer-events:none"></div>'
+      +'<img src="'+src+'" alt="'+esc(p.title)+'" style="position:relative;width:100%;aspect-ratio:16/11;object-fit:cover;display:block;border-radius:18px;border:1px solid rgba(255,255,255,.09)" />'
+      +'</div>'
+      +'<div class="m-lbtxt" style="flex:1 1 300px;min-width:280px">'
+      +'<div style="display:flex;align-items:baseline;gap:16px">'
+      +'<span style="font-size:clamp(42px,6vw,68px);font-weight:200;color:rgba(255,255,255,.22);line-height:.78;letter-spacing:-.03em">'+num+'</span>'
+      +'<span style="font-size:13px;letter-spacing:.28em;color:rgba(255,255,255,.42);font-weight:600">'+esc(p.year)+'</span>'
+      +'</div>'
+      +'<h3 style="margin-top:20px;font-size:clamp(22px,3vw,32px);font-weight:600;color:#fff;letter-spacing:-.02em">'+esc(p.title)+'</h3>'
+      +'<div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;font-size:14px">'
+      +'<div style="display:flex;gap:12px"><span style="color:rgba(255,255,255,.34);min-width:52px;letter-spacing:.02em">고객사</span><span style="color:rgba(255,255,255,.72)">'+esc(p.client)+'</span></div>'
+      +'<div style="display:flex;gap:12px"><span style="color:rgba(255,255,255,.34);min-width:52px;letter-spacing:.02em">수행사</span><span style="color:rgba(255,255,255,.72)">'+esc(p.company)+'</span></div>'
+      +'<div style="display:flex;gap:12px"><span style="color:rgba(255,255,255,.34);min-width:52px;letter-spacing:.02em">기간</span><span style="color:rgba(255,255,255,.72);font-variant-numeric:tabular-nums">'+esc(p.period)+'</span></div>'
+      +'<div style="display:flex;gap:12px"><span style="color:rgba(255,255,255,.34);min-width:52px;letter-spacing:.02em">역할</span><span style="color:rgba(255,255,255,.72)">'+esc(p.role)+'</span></div>'
+      +'</div>'
+      +(p.note ? '<div style="margin-top:20px;display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border:1px solid rgba(245,225,170,.35);border-radius:999px;font-size:12px;color:rgba(245,225,170,.92);letter-spacing:.01em"><span style="width:5px;height:5px;border-radius:50%;background:rgba(245,225,170,.92)"></span>'+esc(p.note)+'</div>' : '')
+      +'</div></div>';
+  });
+
+  html += '</div></section>';
+  document.getElementById('section-editorial').innerHTML = html;
+}
+
+/* ── reveal 옵저버 ── */
+function setupReveal(els) {
+  if (!els || !els.length || typeof IntersectionObserver === 'undefined') return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  Array.from(els).forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .75s cubic-bezier(.2,0,.1,1), transform .75s cubic-bezier(.2,0,.1,1)';
+    io.observe(el);
+  });
+}
+
+/* ══════════ 아이소메트릭 3D E 로고 지오메트리 (Python 렌더로 검증된 좌표계) ══════════
+   World: u(화면 우하), v(화면 좌하), z(위)  /  X=(u-v)A+CX, Y=(u+v)B-zS+CY            */
+var ISO = (function () {
+  var S = 26.0, A = S * Math.sqrt(3) / 2, B = S * 0.5;
+  var W = 10.0, HC = 8.5, HE = 2.0, GAP0 = 1.3;   // 큐브폭·큐브높이·E두께·시작 부양높이
+  var CX = 380.0, CY = 430.0;                       // 바닥(z=0) 앵커
+
+  var E_LOCAL = [[0,0],[10,0],[10,2.4],[2.6,2.4],[2.6,4.15],[8.7,4.15],
+                 [8.7,5.85],[2.6,5.85],[2.6,7.6],[10,7.6],[10,10],[0,10]];
+  var E = E_LOCAL.map(function (p) { return [p[0], 10 - p[1]]; });
+
+  function P(u, v, z) { return [(u - v) * A + CX, (u + v) * B - z * S + CY]; }
+  function path(pts, close) {
+    var d = 'M' + pts.map(function (p) { return p[0].toFixed(2) + ',' + p[1].toFixed(2); }).join(' L');
+    return close === false ? d : d + ' Z';
+  }
+  function sideFaces(poly, z0, z1) {           // 보이는 돌출 측면 (painter: 먼 것부터)
+    var fs = [], n = poly.length;
+    for (var i = 0; i < n; i++) {
+      var p = poly[i], q = poly[(i + 1) % n];
+      var du = q[0] - p[0], dv = q[1] - p[1];
+      var nu = dv, nv = -du;                   // CCW 외향 법선
+      if (nu + nv <= 1e-9) continue;
+      fs.push({ depth: (p[0] + p[1] + q[0] + q[1]) / 2,
+                pts: [P(p[0],p[1],z1), P(q[0],q[1],z1), P(q[0],q[1],z0), P(p[0],p[1],z0)],
+                facing: nu > nv ? 'u' : 'v' });
+    }
+    fs.sort(function (a, b) { return a.depth - b.depth; });
+    return fs;
+  }
+
+  /* 면 위 데이터 바 패턴 (face-local: p 가로, q 위→아래) */
+  var LB = [[0.85,0.6,0.85,2.6],[0.85,3.9,0.85,0.85],[2.35,1.4,0.85,4.6],
+            [3.85,0.6,0.85,0.85],[3.85,2.2,0.85,3.4],[5.35,0.9,0.85,2.2],
+            [5.35,3.8,0.85,2.6],[6.85,1.6,0.85,5.0],[8.3,0.7,0.85,0.85],[8.3,2.3,0.85,2.7]];
+  var RB = [[0.9,1.0,0.85,3.2],[2.4,0.7,0.85,0.85],[2.4,2.3,0.85,3.9],
+            [6.55,0.8,0.85,1.9],[6.55,3.4,0.85,3.0],[8.1,1.4,0.85,0.85],[8.1,3.0,0.85,2.3]];
+  function bars(bs) {
+    return bs.map(function (b) {
+      return '<rect x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="'+b[3]+'" rx="'+(b[2]/2)+'" fill="#2ad4e0" opacity="0.95"/>';
+    }).join('');
+  }
+  var PCT = '<circle cx="4.8" cy="1.55" r="0.5" fill="none" stroke="#2ad4e0" stroke-width="0.4"/>'
+          + '<circle cx="6.2" cy="3.45" r="0.5" fill="none" stroke="#2ad4e0" stroke-width="0.4"/>'
+          + '<line x1="6.35" y1="1.15" x2="4.65" y2="3.85" stroke="#2ad4e0" stroke-width="0.4" stroke-linecap="round"/>';
+
+  /* t: 0(공중 부양 플랫 E) → 1(완성) */
+  function build(t) {
+    var hc = HC * t;
+    var gap = GAP0 * (1 - t);        // 부양 간격이 서서히 닫히며 큐브 위에 착지
+    var z0 = hc + gap, z1 = z0 + HE;
+    var s = '<defs><linearGradient id="eTopG" x1="0" y1="0" x2="1" y2="1">'
+          + '<stop offset="0" stop-color="#8bf7ee"/><stop offset="0.45" stop-color="#3ce9e2"/><stop offset="1" stop-color="#22cbe0"/>'
+          + '</linearGradient><radialGradient id="eFloorG" cx="0.5" cy="0.5" r="0.5">'
+          + '<stop offset="0" stop-color="#1de0e6" stop-opacity="0.30"/><stop offset="1" stop-color="#1de0e6" stop-opacity="0"/>'
+          + '</radialGradient></defs>';
+    var gw = 230 + 50 * t;
+    s += '<ellipse cx="' + CX + '" cy="' + (CY + W * B + 8) + '" rx="' + gw.toFixed(0) + '" ry="' + (gw / 6.5).toFixed(0) + '" fill="url(#eFloorG)"/>';
+
+    if (hc > 0.03) {                 // ── 베이스 큐브 (바닥에서 성장) ──
+      var lf = [P(0,W,hc), P(W,W,hc), P(W,W,0), P(0,W,0)];
+      var rf = [P(W,0,hc), P(W,W,hc), P(W,W,0), P(W,0,0)];
+      var tp = [P(0,0,hc), P(W,0,hc), P(W,W,hc), P(0,W,hc)];
+      s += '<path d="' + path(lf) + '" fill="#0d1a2c"/>';
+      s += '<path d="' + path(rf) + '" fill="#101f34"/>';
+      s += '<path d="' + path(tp) + '" fill="#142438"/>';
+      s += '<clipPath id="eClipL"><path d="' + path(lf) + '"/></clipPath>';
+      s += '<clipPath id="eClipR"><path d="' + path(rf) + '"/></clipPath>';
+      var oL = P(0, W, hc), oR = P(W, 0, hc);   // 각 면의 위쪽 먼 모서리 = 바 좌표 원점
+      s += '<g clip-path="url(#eClipL)"><g transform="matrix(' + A.toFixed(4) + ',' + B.toFixed(4) + ',0,' + S + ',' + oL[0].toFixed(2) + ',' + oL[1].toFixed(2) + ')">' + bars(LB) + '</g></g>';
+      s += '<g clip-path="url(#eClipR)"><g transform="matrix(' + (-A).toFixed(4) + ',' + B.toFixed(4) + ',0,' + S + ',' + oR[0].toFixed(2) + ',' + oR[1].toFixed(2) + ')">' + bars(RB) + PCT + '</g></g>';
+      s += '<path d="' + path([P(0,W,hc), P(W,W,hc), P(W,0,hc)], false) + '" fill="none" stroke="#1de0e6" stroke-opacity="0.28" stroke-width="1.3"/>';
+    }
+
+    /* ── E (돌출체) ── */
+    sideFaces(E, z0, z1).forEach(function (f) {
+      s += '<path d="' + path(f.pts) + '" fill="' + (f.facing === 'u' ? '#0f95a8' : '#0b6d84') + '"/>';
+    });
+    s += '<path d="' + path(E.map(function (p) { return P(p[0], p[1], z1); })) + '" fill="url(#eTopG)"/>';
+    return s;
+  }
+  return { build: build };
+})();
+
+/* ── E 로고 IntersectionObserver — 스크롤 재진입마다 애니메이션 재실행 ── */
+function setupCloseSphere() {
+  var wrap  = document.querySelector('.close-logo-wrap');
+  var logo  = document.getElementById('closeELogo');
+  var text  = document.querySelector('.close-text');
+  var email = document.querySelector('.close-email');
+  if (!wrap) return;
+
+  var DUR = 2400, rafId = null;
+  var ease = function (t) { return 1 - Math.pow(1 - t, 5); };  // easeOutQuint
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (logo) { logo.innerHTML = ISO.build(0); logo.style.transition = 'opacity .45s ease'; }
+
+  function playAnim() {
+    if (rafId) cancelAnimationFrame(rafId);
+    [text, email].forEach(function (el) {
+      if (el) { el.style.animation = 'none'; el.style.opacity = '0'; }
+    });
+    void wrap.offsetWidth; /* force reflow */
+    if (text)  text.style.animation  = 'eTextFade 1.0s cubic-bezier(.2,0,.1,1) 2.0s both';
+    if (email) email.style.animation = 'eTextFade 1.0s cubic-bezier(.2,0,.1,1) 2.3s both';
+    if (!logo) return;
+
+    logo.style.animation = 'none';
+    logo.style.opacity = '1';
+    logo.style.filter = 'drop-shadow(0 0 18px rgba(0,225,242,0.45))';
+
+    if (reduced) {                                  // 모션 최소화: 완성 상태로 바로
+      logo.innerHTML = ISO.build(1);
+      logo.style.animation = 'eLogoPulse 3s ease-in-out infinite';
+      return;
+    }
+    var t0 = performance.now();
+    (function tick(now) {
+      var raw = Math.min((now - t0) / DUR, 1);
+      logo.innerHTML = ISO.build(ease(raw));
+      if (raw < 1) { rafId = requestAnimationFrame(tick); }
+      else {                                        // 착지 → 글로우 펄스
+        logo.style.filter = '';
+        logo.style.animation = 'eLogoPulse 3s ease-in-out infinite';
+        rafId = null;
+      }
+    })(t0);
+  }
+  function hideAnim() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    [text, email].forEach(function (el) {
+      if (el) { el.style.animation = 'none'; el.style.opacity = '0'; }
+    });
+    if (logo) {
+      logo.style.animation = 'none';
+      logo.style.opacity = '0';
+      logo.innerHTML = ISO.build(0);                // 다음 진입을 위해 부양 상태로 리셋
+    }
+  }
+
+  if (typeof IntersectionObserver === 'undefined') { playAnim(); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) playAnim(); else hideAnim();
+    });
+  }, { threshold: 0.25 });
+  io.observe(wrap);
+}
+
+/* ── 초기화 ── */
+document.addEventListener('DOMContentLoaded', function() {
+  renderCareers();
+  renderTimeline();
+  renderLookbook();
+  setMode('orbit');
+  setupReveal(document.querySelectorAll('[data-reveal]'));
+  setupCloseSphere();
+});
+</script>
+
+<script>
+/* ── 파편 조각 애니메이션 ── */
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var SHAPES = [
+    '0,-12 10,6 -10,6',
+    '-3,-14 11,3 5,14 -9,5',
+    '0,-18 4,18 -4,18',
+    '-9,-4 11,-2 6,11 -6,9',
+    '0,-10 8,0 0,10 -8,0',
+    '-4,-15 10,4 -9,4',
+    '0,-7 15,2 8,11 -4,10 -10,2',
+    '-2,-13 9,3 5,15 -10,7',
+    '0,-6 7,3 -7,3',
+    '-5,-9 11,-3 7,10 -8,8',
+    '0,-20 3,20 -3,20',
+    '-8,-2 10,-6 5,12 -4,10',
+    '0,-8 8,8 -8,8',
+    '-6,-10 6,-10 10,6 0,12 -10,6',
+  ];
+  var COLORS = [
+    '#dde8f0','#f0e8e4','#f5f0eb',
+    '#e8e2f0','#e0edea','#f2f0f5',
+    '#f0ede2','#dde8f0','#ede8e0',
+    '#f5f5f4','#e2eee8','#ece2f0',
+  ];
+  var SHARDS = [
+    [-168,-98, 0,0,   4600,0.75, 0.045,-18,0],
+    [ 125,-200,2,680, 3800,0.65,-0.06,  14,2],
+    [-240, 25, 3,1450,5300,0.70, 0.038,-22,1],
+    [ 200,-72, 1,300, 4900,0.68,-0.05,  18,4],
+    [ -98, 172,4,1100,4100,0.62, 0.055,-12,6],
+    [ 222, 100,5,1950,4600,0.72,-0.04,  16,0],
+    [  68, 232,6,500, 5500,0.58, 0.062, 10,7],
+    [-222,-120,7,1800,4200,0.66,-0.048,-20,3],
+    [ 162, 188,8,250, 5100,0.60, 0.042, 15,1],
+    [-125,-222,9,1300,4400,0.64,-0.057,-16,5],
+    [ 242,-105,10,850,4000,0.70, 0.035, 20,8],
+    [-188, 152,11,2100,4700,0.66,-0.043,-18,9],
+    [ -40,-258,0,1600,5200,0.56, 0.058,  8,2],
+    [ 252,  40,3,960, 4500,0.68,-0.052, 22,11],
+    [-145, -60,5,420, 3900,0.62, 0.040,-14,10],
+    [  90,-172,1,1720,4800,0.58,-0.065, 12,0],
+    [-272, -30,4,2350,5600,0.54, 0.032,-24,6],
+    [ 178,-142,6,780, 4300,0.64,-0.048, 16,3],
+    [ -55, 245,13,1120,4900,0.50, 0.052,-10,7],
+    [ 132, -88,2,2600,5100,0.60,-0.038, 14,4],
+  ];
+  var TRAVEL = 100;
+
+  function init(){
+    var container = document.getElementById('riseLines');
+    if(!container){ setTimeout(init,60); return; }
+    var items = SHARDS.map(function(d){
+      var poly = document.createElementNS(NS,'polygon');
+      poly.setAttribute('points',SHAPES[d[2]]);
+      poly.setAttribute('fill',COLORS[d[8]]);
+      poly.setAttribute('fill-opacity','0');
+      container.appendChild(poly);
+      return { el:poly, cx:d[0],cy:d[1], delay:d[3],cycle:d[4],opMax:d[5], rotSpd:d[6],driftX:d[7], rot0:Math.random()*360 };
+    });
+    var t0=null;
+    function tick(ts){
+      if(!t0) t0=ts;
+      var elapsed=ts-t0;
+      items.forEach(function(it){
+        var raw=elapsed-it.delay;
+        if(raw<0) raw+=it.cycle*Math.ceil(-raw/it.cycle);
+        var p=(raw%it.cycle)/it.cycle;
+        var yOff=TRAVEL*(0.35-p);
+        var xOff=it.driftX*Math.sin(p*Math.PI);
+        var rot=(it.rot0+elapsed*it.rotSpd)%360;
+        var op=Math.sin(p*Math.PI)*it.opMax;
+        it.el.setAttribute('transform','translate('+(it.cx+xOff).toFixed(1)+','+(it.cy+yOff).toFixed(1)+') rotate('+rot.toFixed(1)+')');
+        it.el.setAttribute('fill-opacity',op.toFixed(3));
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+
+<script>
+/* ── 텍스트 노드 공전 애니메이션 ── */
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  var RINGS=[
+    {r:175,period:22000,dir: 1,cosP:0.9511,sinP:0.3090},
+    {r:212,period:17000,dir:-1,cosP:0.9135,sinP:0.4067},
+    {r:250,period:12000,dir: 1,cosP:0.9659,sinP:0.2588},
+  ];
+  var LABEL_W={'PLANNING':92,'CONTENT':82,'LMS':44,'EDUTECH':82,'AI':34,'GROWTH':72};
+  var NODES=[
+    {label:'PLANNING',ring:0,angle0:0},
+    {label:'CONTENT', ring:0,angle0:Math.PI},
+    {label:'LMS',     ring:1,angle0:1.047},
+    {label:'EDUTECH', ring:1,angle0:1.047+Math.PI},
+    {label:'AI',      ring:2,angle0:2.094},
+    {label:'GROWTH',  ring:2,angle0:2.094+Math.PI},
+  ];
+  var PH=23;
+
+  function init(){
+    var container=document.getElementById('orbitNodes');
+    if(!container){ setTimeout(init,60); return; }
+    var items=NODES.map(function(n){
+      var w=LABEL_W[n.label]||60;
+      var g=document.createElementNS(NS,'g');
+      var rect=document.createElementNS(NS,'rect');
+      rect.setAttribute('x',-(w/2)); rect.setAttribute('y',-(PH/2));
+      rect.setAttribute('width',w); rect.setAttribute('height',PH);
+      rect.setAttribute('rx',PH/2);
+      rect.setAttribute('fill','rgba(255,255,255,0.07)');
+      rect.setAttribute('stroke','rgba(255,255,255,0.28)');
+      rect.setAttribute('stroke-width','0.7');
+      var txt=document.createElementNS(NS,'text');
+      txt.setAttribute('x','0'); txt.setAttribute('y','4');
+      txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('font-family','Pretendard,sans-serif');
+      txt.setAttribute('font-size','11'); txt.setAttribute('font-weight','600');
+      txt.setAttribute('letter-spacing','1.8');
+      txt.setAttribute('fill','rgba(255,255,255,0.9)');
+      txt.textContent=n.label;
+      g.appendChild(rect); g.appendChild(txt);
+      container.appendChild(g);
+      return {g:g, ring:RINGS[n.ring], angle0:n.angle0};
+    });
+
+    var t0=null;
+    function tick(ts){
+      if(!t0) t0=ts;
+      var elapsed=ts-t0;
+      items.forEach(function(it){
+        var ring=it.ring;
+        var theta=it.angle0+ring.dir*(elapsed/ring.period)*2*Math.PI;
+        var x=ring.r*Math.cos(theta);
+        var y=ring.r*Math.sin(theta)*ring.cosP;
+        var depth=0.5+0.5*Math.sin(theta);
+        var op=(0.32+0.68*depth).toFixed(3);
+        it.g.setAttribute('transform','translate('+x.toFixed(1)+','+y.toFixed(1)+')');
+        it.g.setAttribute('opacity',op);
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+
+</body>
+</html>

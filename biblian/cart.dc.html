@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIBLIAN · 장바구니</title>
+<meta name="description" content="비블리안 공식 온라인 스토어 장바구니.">
+<!-- 링크 공유 미리보기 (Open Graph) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="BIBLIAN" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="BIBLIAN · 장바구니" />
+<meta property="og:description" content="비블리안 공식 온라인 스토어 장바구니." />
+<meta property="og:url" content="https://eulim.vercel.app/biblian/cart.dc.html" />
+<meta property="og:image" content="https://eulim.vercel.app/og-biblian.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="BIBLIAN — 도시인들을 위한 헤어 웰니스" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="BIBLIAN · 장바구니" />
+<meta name="twitter:description" content="비블리안 공식 온라인 스토어 장바구니." />
+<meta name="twitter:image" content="https://eulim.vercel.app/og-biblian.jpg" />
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#2B2420"><svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#2B2420"/><text x="600" y="430" text-anchor="middle" fill="#F7F1E7" font-family="serif" font-size="90" font-weight="700" letter-spacing="14">BIBLIAN</text></svg></template>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+/* ===== Biblian mobile responsive ===== */
+@media (max-width:640px){
+  header [style*="grid-template-columns: 1fr auto 1fr"]{display:flex!important;flex-direction:column!important;align-items:center!important;gap:10px!important;padding:12px 16px!important}
+  header nav{order:2;flex-wrap:wrap;justify-content:center;gap:14px!important;font-size:12.5px!important}
+  header nav + a{order:1}
+  header nav + a + div{order:3;justify-content:center!important;gap:18px!important}
+}
+@media (max-width:860px){
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1fr 1.06fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1.05fr .95fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 360px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 400px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 200px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 280px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr auto;"]{grid-template-columns:1fr!important}
+  [style*="padding: 64px 56px"]{padding:40px 26px!important}
+  [style*="padding: 60px 56px"]{padding:38px 24px!important}
+  [style*="padding: 80px 28px"]{padding:52px 22px!important}
+  [style*="padding: 66px 28px"]{padding:44px 22px!important}
+  [style*="padding: 44px 48px"]{padding:30px 26px!important}
+  [style*="font-size: 44px"]{font-size:32px!important}
+}
+@media (max-width:560px){
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:1fr 1fr!important}
+  header nav{gap:13px!important;font-size:12px!important}
+  header [style*="grid-template-columns: 1fr auto 1fr"]{padding-left:16px!important;padding-right:16px!important}
+  [style*="padding: 60px"]{padding:34px 22px!important}
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F1EADD;color:#2B2420;font-family:'Pretendard',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+image-slot{display:block}
+image-slot::part(ring){display:none!important}
+.qty{display:flex;align-items:center;border:1px solid rgba(60,40,20,.2);border-radius:9px;overflow:hidden}
+.qty button{width:32px;height:34px;border:none;background:#F7F1E7;color:#4A4038;font-size:15px;cursor:pointer}
+.qty span{width:40px;text-align:center;font-size:13.5px;font-weight:600}
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100vh;display:flex;flex-direction:column">
+
+<div style="background:#2B2420;color:#EDE4D5;font-size:12px;letter-spacing:.04em;text-align:center;padding:9px 16px;font-weight:500">회원가입 시 5,000원 적립금 · 2개 이상 골라담으면 10% OFF + 사은품 증정</div>
+
+<header style="background:rgba(241,234,221,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(60,40,20,.10)">
+  <div style="max-width:1180px;margin:0 auto;padding:16px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+    <nav style="display:flex;gap:26px;font-size:13.5px;font-weight:600;letter-spacing:.02em;color:#4A4038">
+      <a href="list.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Shop</a><a href="brand.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">About</a><a href="community.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Community</a><a href="giftset.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Set&amp;Gift</a>
+    </nav>
+    <a href="home.dc.html" style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:22px;letter-spacing:.22em;color:#2B2420;text-decoration:none;text-align:center">BIBLIAN</a>
+    <div style="display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:13px;font-weight:600;color:#4A4038">
+      <span style="cursor:pointer">Search</span><a href="login.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Login</a><span style="cursor:pointer;color:#2B2420;border-bottom:2px solid #B0502C;padding-bottom:3px">Cart (2)</span>
+    </div>
+  </div>
+</header>
+
+<main style="flex:1;max-width:1180px;width:100%;margin:0 auto;padding:40px 28px 0">
+  <h1 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:30px;margin:0 0 6px;letter-spacing:-.01em">장바구니</h1>
+  <p style="font-size:13.5px;color:#8D8275;margin:0 0 30px">담은 상품 <b style="color:#2B2420">2</b>개</p>
+
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:36px;align-items:start">
+    <!-- items -->
+    <div>
+      <!-- header row -->
+      <div style="display:flex;align-items:center;gap:10px;padding:0 4px 14px;border-bottom:1px solid rgba(60,40,20,.14);font-size:12.5px;color:#8D8275;font-weight:600">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" checked style="width:16px;height:16px;accent-color:#2B2420">전체선택 (2/2)</label>
+        <span style="margin-left:auto;cursor:pointer">선택삭제</span>
+      </div>
+
+      <!-- item 1 -->
+      <div style="display:flex;gap:18px;padding:24px 4px;border-bottom:1px solid rgba(60,40,20,.1)">
+        <input type="checkbox" checked style="width:16px;height:16px;accent-color:#2B2420;margin-top:34px">
+        <image-slot src="https://biblian.co.kr/web/product/medium/202311/d6b69fd8c7c3cdf0b9907977ebd2d8ac.png" fit="contain" style="width:100px;height:100px;flex:none;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:12px" shape="rect" placeholder="제품"></image-slot>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div>
+          <h3 style="font-size:15px;font-weight:600;margin:6px 0 4px">어드밴스드 샴푸 500ml</h3>
+          <p style="font-size:12.5px;color:#8D8275;margin:0 0 14px">탈모 · 지성 · 쿨링</p>
+          <div class="qty"><button>−</button><span>1</span><button>+</button></div>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end">
+          <span style="cursor:pointer;font-size:16px;color:#A89C8E;line-height:1">✕</span>
+          <div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">42,000<span style="font-size:12px;font-family:'Pretendard';color:#8D8275"> 원</span></div>
+        </div>
+      </div>
+
+      <!-- item 2 -->
+      <div style="display:flex;gap:18px;padding:24px 4px;border-bottom:1px solid rgba(60,40,20,.1)">
+        <input type="checkbox" checked style="width:16px;height:16px;accent-color:#2B2420;margin-top:34px">
+        <image-slot src="https://biblian.co.kr/web/product/medium/202602/8264d0f146ae8c4fbb0c9ee1a18a3ba5.png" fit="contain" style="width:100px;height:100px;flex:none;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:12px" shape="rect" placeholder="제품"></image-slot>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">FILL UP</div>
+          <h3 style="font-size:15px;font-weight:600;margin:6px 0 4px">헤어 마스크 500ml</h3>
+          <p style="font-size:12.5px;color:#8D8275;margin:0 0 14px">손상 · 영양 · 보습</p>
+          <div class="qty"><button>−</button><span>1</span><button>+</button></div>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end">
+          <span style="cursor:pointer;font-size:16px;color:#A89C8E;line-height:1">✕</span>
+          <div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">50,000<span style="font-size:12px;font-family:'Pretendard';color:#8D8275"> 원</span></div>
+        </div>
+      </div>
+
+      <!-- notice -->
+      <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:12.5px;color:#55614A;background:rgba(85,97,74,.08);border-radius:10px;padding:14px 16px">
+        <span style="font-weight:700">TIP</span>2개 이상 골라담으면 10% 할인이 자동 적용됩니다.
+      </div>
+
+      <a href="list.dc.html" style="display:inline-flex;align-items:center;height:46px;padding:0 22px;border-radius:10px;border:1px solid rgba(60,40,20,.25);color:#2B2420;font-size:13.5px;font-weight:600;text-decoration:none;margin-top:24px">← 쇼핑 계속하기</a>
+    </div>
+
+    <!-- summary -->
+    <aside style="background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:18px;padding:28px 26px;position:sticky;top:20px">
+      <h2 style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:600;margin:0 0 20px">결제 예상 금액</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px;color:#4A4038">
+        <div style="display:flex;justify-content:space-between"><span style="color:#6E6357">상품금액</span><span>92,000 원</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#6E6357">세트 할인 (10%)</span><span style="color:#B0502C">− 9,200 원</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#6E6357">배송비</span><span>무료</span></div>
+      </div>
+      <div style="border-top:1px solid rgba(60,40,20,.14);margin:20px 0;padding-top:18px;display:flex;justify-content:space-between;align-items:baseline">
+        <span style="font-size:14px;font-weight:600">총 결제금액</span>
+        <span style="font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;color:#2B2420">82,800<span style="font-size:13px;font-family:'Pretendard'"> 원</span></span>
+      </div>
+      <div style="font-size:12px;color:#55614A;margin-bottom:20px">구매 시 <b>828원</b> 적립 예정</div>
+      <button style="width:100%;height:54px;border-radius:11px;background:#B0502C;color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer">주문하기</button>
+      <button style="width:100%;height:50px;border-radius:11px;background:transparent;border:1px solid rgba(60,40,20,.25);color:#2B2420;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px">선물하기</button>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:20px;font-size:12px;color:#8D8275">
+        <span>· 5만원 이상 구매 시 무료배송</span>
+        <span>· 평일 15시 이전 결제 시 당일출고</span>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer style="background:#EDE4D5;border-top:1px solid rgba(60,40,20,.1);margin-top:56px">
+  <div style="max-width:1180px;margin:0 auto;padding:26px 28px;font-size:11px;color:#A89C8E;line-height:1.7;text-align:center">(주)뷰티앤케이 · 대표 고유리, 최정우 · 사업자등록번호 655-87-00854 · 비블리안 공식 온라인 스토어 All rights reserved</div>
+</footer>
+
+</div>
+</x-dc>
+</body>
+</html>

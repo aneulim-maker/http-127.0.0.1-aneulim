@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#2B2420"><svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#2B2420"/><text x="600" y="430" text-anchor="middle" fill="#F7F1E7" font-family="serif" font-size="90" font-weight="700" letter-spacing="14">BIBLIAN</text></svg></template>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+/* ===== Biblian mobile responsive ===== */
+@media (max-width:640px){
+  header [style*="grid-template-columns: 1fr auto 1fr"]{display:flex!important;flex-direction:column!important;align-items:center!important;gap:10px!important;padding:12px 16px!important}
+  header nav{order:2;flex-wrap:wrap;justify-content:center;gap:14px!important;font-size:12.5px!important}
+  header nav + a{order:1}
+  header nav + a + div{order:3;justify-content:center!important;gap:18px!important}
+}
+@media (max-width:860px){
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1fr 1.06fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1.05fr .95fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 360px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 400px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 200px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 280px 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: 1fr auto;"]{grid-template-columns:1fr!important}
+  [style*="padding: 64px 56px"]{padding:40px 26px!important}
+  [style*="padding: 60px 56px"]{padding:38px 24px!important}
+  [style*="padding: 80px 28px"]{padding:52px 22px!important}
+  [style*="padding: 66px 28px"]{padding:44px 22px!important}
+  [style*="padding: 44px 48px"]{padding:30px 26px!important}
+  [style*="font-size: 44px"]{font-size:32px!important}
+}
+@media (max-width:560px){
+  [style*="grid-template-columns: repeat(3, 1fr)"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns: repeat(4, 1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+  [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:1fr 1fr!important}
+  header nav{gap:13px!important;font-size:12px!important}
+  header [style*="grid-template-columns: 1fr auto 1fr"]{padding-left:16px!important;padding-right:16px!important}
+  [style*="padding: 60px"]{padding:34px 22px!important}
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F1EADD;color:#2B2420;font-family:'Pretendard',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+image-slot{display:block}
+image-slot::part(ring){display:none!important}
+#bl-src{position:absolute;left:-9999px}
+.bl-src{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-start;justify-content:center;background:rgba(43,36,32,.5);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+#bl-src:checked~.bl-src{opacity:1;pointer-events:auto}
+.bl-src__p{transform:translateY(-14px);transition:transform .28s}
+#bl-src:checked~.bl-src .bl-src__p{transform:translateY(0)}
+</style>
+</helmet>
+
+<div style="width:100%;overflow:hidden">
+
+<div style="background:#2B2420;color:#EDE4D5;font-size:12px;letter-spacing:.04em;text-align:center;padding:9px 16px;font-weight:500">회원가입 시 5,000원 적립금 · 2개 이상 골라담으면 10% OFF + 사은품 증정</div>
+
+<input type="checkbox" id="bl-src">
+<div class="bl-src">
+  <label for="bl-src" style="position:absolute;inset:0;cursor:default"></label>
+  <div class="bl-src__p" style="position:relative;z-index:1;width:100%;max-width:680px;margin:12vh 24px 0;background:#F7F1E7;border-radius:18px;box-shadow:0 30px 60px rgba(43,36,32,.32);padding:28px 30px 32px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:600">무엇을 찾으시나요?</div>
+      <label for="bl-src" style="cursor:pointer;width:34px;height:34px;border-radius:50%;background:#EDE4D5;display:flex;align-items:center;justify-content:center;font-size:15px;color:#4A4038">✕</label>
+    </div>
+    <form action="list.dc.html" style="display:flex;align-items:center;gap:12px;border:1.5px solid #2B2420;border-radius:12px;padding:0 8px 0 16px;height:56px;background:#fff">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8D8275" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" name="q" placeholder="제품명·고민·성분으로 검색 (예: 탈모 샴푸)" style="flex:1;border:none;outline:none;background:transparent;font-size:15px;font-family:'Pretendard';color:#2B2420">
+      <button type="submit" style="height:40px;padding:0 18px;border:none;border-radius:9px;background:#2B2420;color:#F7F1E7;font-size:13.5px;font-weight:600;cursor:pointer">검색</button>
+    </form>
+    <div style="margin-top:22px">
+      <div style="font-size:11.5px;font-weight:700;color:#8A6A3C;letter-spacing:.08em;margin-bottom:12px">인기 검색어</div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px">
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">탈모 샴푸</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">헤어 마스크</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">어드밴스드 앰플</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">헤어 키퍼</a>
+        <a href="list.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">지성 두피</a>
+        <a href="giftset.dc.html" style="text-decoration:none;font-size:12.5px;color:#4A4038;background:#fff;border:1px solid rgba(60,40,20,.14);border-radius:999px;padding:8px 14px">선물세트</a>
+      </div>
+    </div>
+    <div style="margin-top:24px;border-top:1px solid rgba(60,40,20,.12);padding-top:20px">
+      <div style="font-size:11.5px;font-weight:700;color:#8A6A3C;letter-spacing:.08em;margin-bottom:12px">바로가기</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <a href="list.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">전체 상품 →</a>
+        <a href="giftset.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">선물세트 →</a>
+        <a href="community.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">리뷰 →</a>
+        <a href="brand.dc.html" style="text-decoration:none;font-size:13px;font-weight:600;color:#55614A">브랜드 스토리 →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header style="position:sticky;top:0;z-index:50;background:rgba(241,234,221,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(60,40,20,.10)">
+  <div style="max-width:1180px;margin:0 auto;padding:16px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+    <nav style="display:flex;gap:26px;font-size:13.5px;font-weight:600;letter-spacing:.02em;color:#4A4038">
+      <span style="cursor:pointer;color:#2B2420;border-bottom:2px solid #B0502C;padding-bottom:3px">Shop</span><a href="brand.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">About</a><a href="community.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Community</a><a href="giftset.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Set&amp;Gift</a>
+    </nav>
+    <a href="home.dc.html" style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:22px;letter-spacing:.22em;color:#2B2420;text-decoration:none;text-align:center">BIBLIAN</a>
+    <div style="display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:13px;font-weight:600;color:#4A4038">
+      <label for="bl-src" style="cursor:pointer">Search</label><a href="login.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Login</a><a href="cart.dc.html" style="cursor:pointer;color:inherit;text-decoration:none">Cart (0)</a>
+    </div>
+  </div>
+</header>
+
+<!-- category banner -->
+<section style="position:relative;min-height:560px;display:flex;align-items:center;justify-content:center;text-align:center">
+  <image-slot id="bl-listbanner" src="https://images.pexels.com/photos/4940787/pexels-photo-4940787.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1800" style="position:absolute;inset:0;width:100%;height:100%" shape="rect" fit="cover" placeholder="라인 원료 무드컷 (와이드)"></image-slot>
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(25,30,20,.55),rgba(25,30,20,.35) 45%,rgba(25,30,20,.6))"></div>
+  <video autoplay muted loop playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:lighten;opacity:.45;pointer-events:none" aria-hidden="true">
+    <source src="./ripple.mp4" type="video/mp4">
+  </video>
+  <div style="position:relative;padding:0 28px;color:#F7F1E7;max-width:760px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#E4D3AE">Nature Collection</div>
+    <h1 style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:44px;line-height:1.42;margin:20px 0 0;letter-spacing:-.01em;text-shadow:0 2px 14px rgba(0,0,0,.35)">자연을 담은 모든 제품</h1>
+    <p style="font-size:16px;line-height:1.85;color:rgba(247,241,231,.9);margin:22px auto 0;max-width:560px;word-break:keep-all">천연 원료로 완성한 헤어 웰니스, 비블리안의 전 라인업</p>
+  </div>
+</section>
+
+<!-- content -->
+<section style="max-width:1180px;margin:0 auto;padding:34px 28px 20px;display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start">
+  <!-- filter sidebar -->
+  <aside style="position:sticky;top:96px">
+    <div style="margin-bottom:26px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#8A6A3C;margin-bottom:14px">TYPE 제품별</div>
+      <div style="display:flex;flex-direction:column;gap:11px;font-size:13.5px;color:#4A4038">
+        <span style="cursor:pointer;font-weight:600;color:#2B2420">전체</span>
+        <span style="cursor:pointer">샴푸</span>
+        <span style="cursor:pointer">트리트먼트</span>
+        <span style="cursor:pointer">앰플</span>
+        <span style="cursor:pointer">에센스</span>
+        <span style="cursor:pointer">헤어 마스크</span>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(60,40,20,.12);padding-top:22px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#8A6A3C;margin-bottom:14px">CHAPTER 고민별</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span style="cursor:pointer;font-size:12px;font-weight:600;color:#55614A;background:rgba(110,122,94,.14);border:1px solid rgba(110,122,94,.3);border-radius:999px;padding:6px 12px">BE STRONG 탈모</span>
+        <span style="cursor:pointer;font-size:12px;font-weight:600;color:#55614A;background:rgba(110,122,94,.14);border:1px solid rgba(110,122,94,.3);border-radius:999px;padding:6px 12px">FILL UP 손상모</span>
+        <span style="cursor:pointer;font-size:12px;font-weight:600;color:#55614A;background:rgba(110,122,94,.14);border:1px solid rgba(110,122,94,.3);border-radius:999px;padding:6px 12px">BALANCE 지성</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- grid -->
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-size:13px;color:#8D8275">총 <b style="color:#2B2420">9</b>개 상품</div>
+      <div style="display:flex;gap:16px;font-size:13px;color:#6E6357">
+        <span style="cursor:pointer;color:#2B2420;font-weight:600">추천순</span><span style="cursor:pointer">신상품순</span><span style="cursor:pointer">낮은 가격순</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl1" src="https://biblian.co.kr/web/product/medium/202311/d6b69fd8c7c3cdf0b9907977ebd2d8ac.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot><span style="position:absolute;top:12px;left:12px;background:#B0502C;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:5px">BEST</span></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">어드밴스드 샴푸 500ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">탈모 · 지성 · 쿨링</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">42,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl2" src="https://biblian.co.kr/web/product/medium/202311/697f2bbb32695dabf53e0f17d5167724.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">클래식 샴푸 500ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">탈모 · 건조 · 민감</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">42,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl3" src="https://biblian.co.kr/web/product/medium/202311/5f081f537f976bdb8cf60bca59cff499.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">어드밴스드 앰플 95ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">탈모 · 영양 · 보습</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">48,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl4" src="https://biblian.co.kr/web/product/medium/202311/60b0bcc6d90d041bb78f1ff1c7fc3d81.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">트리트먼트 500ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">손상모 · 보습 · 영양</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">45,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl5" src="https://biblian.co.kr/web/product/medium/202602/8264d0f146ae8c4fbb0c9ee1a18a3ba5.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot><span style="position:absolute;top:12px;left:12px;background:#B0502C;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:5px">BEST</span></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">FILL UP</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">헤어 마스크 500ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">손상 · 영양 · 보습</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">50,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl6" src="https://biblian.co.kr/web/product/medium/202311/03304e7d16adc1d123abc0b81289e5a2.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">FILL UP</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">헤어 키퍼 100ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">열보호 · 영양 · 보습</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">45,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl7" src="https://biblian.co.kr/web/product/medium/202505/89a4fabce91b6e39b3a95820b602b58e.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="제품 정물"></image-slot></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">FILL UP</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">헤어 키퍼 50ml</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">열보호 · 영양 · 보습</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">25,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl8" src="https://biblian.co.kr/web/product/medium/202509/2776a6840f8f12c1440bd61eafb2a111.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="세트 정물"></image-slot><span style="position:absolute;top:12px;left:12px;background:#55614A;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:5px">SET</span></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">SET&amp;GIFT</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">10% 골라담기 프로모션</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">2개 이상 구매 시 10% 할인</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">42,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+      <a href="detail.dc.html" style="text-decoration:none;color:inherit;background:#FFFDF9;border:1px solid rgba(60,40,20,.09);border-radius:16px;overflow:hidden;display:block">
+        <div style="position:relative"><image-slot id="pl9" src="https://biblian.co.kr/web/product/medium/202311/5826e638942a387d08d7c74904178674.png" style="width:100%;height:220px;background:#FBF6EC" shape="rect" fit="contain" placeholder="세트 정물"></image-slot><span style="position:absolute;top:12px;left:12px;background:#55614A;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:5px">SET</span></div>
+        <div style="padding:18px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#55614A">BE STRONG</div><h3 style="font-size:14.5px;font-weight:600;margin:7px 0 6px;line-height:1.4">트래블 세트</h3><p style="font-size:12px;color:#8D8275;margin:0 0 12px">클래식 + 어드밴스드 + 트리트먼트</p><div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600">19,000<span style="font-size:12px;color:#8D8275;font-family:'Pretendard'"> 원</span></div></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<footer style="background:#EDE4D5;border-top:1px solid rgba(60,40,20,.1);margin-top:56px">
+  <div style="max-width:1180px;margin:0 auto;padding:52px 28px 40px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px">
+      <div>
+        <div style="font-family:'Noto Serif KR',serif;font-weight:700;font-size:20px;letter-spacing:.2em">BIBLIAN</div>
+        <p style="font-size:12.5px;line-height:1.7;color:#8D8275;margin:14px 0 0;max-width:230px">도시인들을 위한 헤어 웰니스<br>Urban Detox Remedy</p>
+      </div>
+      <div><div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8A6A3C;margin-bottom:14px">SHOP</div><div style="display:flex;flex-direction:column;gap:9px;font-size:13px;color:#6E6357"><span>전체 상품</span><span>샴푸</span><span>트리트먼트</span><span>앰플 · 에센스</span></div></div>
+      <div><div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8A6A3C;margin-bottom:14px">ABOUT</div><div style="display:flex;flex-direction:column;gap:9px;font-size:13px;color:#6E6357"><span>브랜드 스토리</span><span>스토어 안내</span><span>이벤트</span><span>고객센터</span></div></div>
+      <div><div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8A6A3C;margin-bottom:14px">CS 1800-6820</div><p style="font-size:12.5px;line-height:1.7;color:#8D8275;margin:0">평일 09:00 – 17:00<br>토·일·공휴일 휴무</p></div>
+    </div>
+    <div style="border-top:1px solid rgba(60,40,20,.12);margin-top:40px;padding-top:22px;font-size:11px;color:#A89C8E;line-height:1.7">(주)뷰티앤케이 · 대표 고유리, 최정우 · 사업자등록번호 655-87-00854 · 비블리안 공식 온라인 스토어 All rights reserved</div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+</body>
+</html>

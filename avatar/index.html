@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eulim · AI 아바타에게 물어보세요</title>
+<meta name="description" content="22년 차 서비스 기획자 eulim의 AI 아바타. 궁금한 질문을 누르면 아바타가 직접 답합니다.">
+<meta property="og:title" content="eulim · AI 아바타">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://eulim.vercel.app/avatar/index.html">
+<meta property="og:image" content="https://eulim.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eulim.vercel.app/og-image.jpg">
+<meta property="og:description" content="질문을 누르면 AI 아바타가 eulim을 대신해 답합니다.">
+<style>
+  :root{
+    --amethyst:#7b4fd0; --amethyst-glow:#a878ff; --gold:#c9a45c;
+    --ink:#0d0b16; --ink-soft:#171327; --mist:#e7e2f2;
+    --mist-dim:#9d95b8; --line:rgba(168,120,255,.22);
+    --accent:#f0553b; /* 포트폴리오 주황 (연결감) */
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #241a3d 0%, var(--ink) 55%),
+      var(--ink);
+    color:var(--mist);
+    font-family:"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    min-height:100vh;
+  }
+
+  /* ── 상단 바: 포트폴리오와의 연결 ── */
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:18px 28px; max-width:960px; margin:0 auto;
+  }
+  .wordmark{font-weight:800; letter-spacing:.14em; font-size:15px; color:#fff; text-decoration:none}
+  .wordmark em{font-style:normal; color:var(--accent)}
+  .back{color:var(--mist-dim); font-size:13px; text-decoration:none; letter-spacing:.04em;
+    border-bottom:1px solid transparent; transition:.2s}
+  .back:hover{color:var(--mist); border-color:var(--mist-dim)}
+
+  .stage{width:100%; max-width:860px; margin:0 auto; padding:8px 20px 60px}
+  .eyebrow{
+    display:flex; align-items:center; gap:10px; justify-content:center;
+    font-size:12px; letter-spacing:.42em; text-transform:uppercase;
+    color:var(--gold); margin:18px 0 14px; font-weight:600;
+  }
+  .eyebrow::before,.eyebrow::after{content:"";height:1px;width:38px;background:linear-gradient(90deg,transparent,var(--gold))}
+  .eyebrow::after{background:linear-gradient(90deg,var(--gold),transparent)}
+  h1{text-align:center; font-weight:300; font-size:clamp(26px,4.4vw,40px); line-height:1.25; margin-bottom:6px}
+  h1 b{font-weight:600; color:#fff}
+  .sub{text-align:center; color:var(--mist-dim); font-size:14px; margin-bottom:28px}
+
+  /* ── 스크린 ── */
+  .screen{
+    position:relative; border-radius:20px; overflow:hidden;
+    aspect-ratio:16/9; background:#000; border:1px solid var(--line);
+    box-shadow:0 0 0 1px rgba(0,0,0,.4), 0 30px 80px -30px rgba(123,79,208,.55);
+  }
+  .screen video{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;opacity:0;transition:opacity .5s ease;z-index:1}
+  .screen video.show{opacity:1;z-index:2}
+  .halo{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 120px 10px rgba(123,79,208,.28);border-radius:20px;z-index:2}
+  .status{
+    position:absolute;left:16px;bottom:14px;z-index:3;display:flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    background:rgba(13,11,22,.55);backdrop-filter:blur(8px);
+    padding:6px 12px;border-radius:999px;border:1px solid var(--line)
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--amethyst-glow);box-shadow:0 0 10px var(--amethyst-glow);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+  .status.speaking .dot{background:var(--gold);box-shadow:0 0 10px var(--gold);animation-duration:.9s}
+
+  /* 현재 질문 자막 */
+  .caption{
+    position:absolute; right:16px; bottom:14px; z-index:3; max-width:55%;
+    font-size:13px; color:var(--mist); text-align:right;
+    background:rgba(13,11,22,.55); backdrop-filter:blur(8px);
+    padding:7px 13px; border-radius:999px; border:1px solid var(--line);
+    opacity:0; transform:translateY(4px); transition:.35s;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .caption.show{opacity:1; transform:none}
+
+  .placeholder{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;
+    background:radial-gradient(400px 300px at 50% 40%,#2a2046,#0d0b16)}
+  .placeholder p{color:var(--mist-dim);font-size:13px;line-height:1.7;max-width:360px}
+  .placeholder code{color:var(--amethyst-glow);font-family:ui-monospace,monospace;font-size:12px}
+
+  /* ── 질문 레일 ── */
+  .rail{margin-top:26px}
+  .rail-label{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--mist-dim);margin-bottom:14px;padding-left:2px}
+  .groups{display:flex;flex-direction:column;gap:20px}
+  .group-title{font-size:12px;color:var(--gold);letter-spacing:.1em;margin-bottom:9px;font-weight:600;opacity:.85}
+  .btns{display:flex;flex-wrap:wrap;gap:9px}
+  .q{
+    appearance:none;cursor:pointer;font:inherit;font-size:14px;color:var(--mist);
+    background:linear-gradient(180deg,var(--ink-soft),#120f20);
+    border:1px solid var(--line);border-radius:12px;padding:11px 16px;
+    transition:all .22s ease;position:relative;letter-spacing:.01em
+  }
+  .q:hover{border-color:var(--amethyst-glow);color:#fff;transform:translateY(-2px);box-shadow:0 8px 24px -12px var(--amethyst)}
+  .q:focus-visible{outline:2px solid var(--amethyst-glow);outline-offset:2px}
+  .q.active{background:linear-gradient(180deg,var(--amethyst),#5a37a0);border-color:var(--amethyst-glow);color:#fff}
+  .q.played::before{content:"✓ ";color:var(--gold);font-size:12px}
+  .q[data-missing="1"]{opacity:.4}
+  .q[data-missing="1"]::after{content:"준비중";position:absolute;top:-7px;right:-6px;font-size:9px;
+    background:var(--gold);color:var(--ink);padding:1px 6px;border-radius:6px}
+
+  /* 링크형 버튼: 포트폴리오로 이동 */
+  .q-link::after{content:" ↗";color:var(--gold);font-size:13px}
+  .q-link:hover{border-color:var(--gold);box-shadow:0 8px 24px -12px var(--gold)}
+
+  /* ── 하단 CTA ── */
+  .cta{
+    margin-top:44px; text-align:center; padding:30px 20px;
+    border:1px solid var(--line); border-radius:18px;
+    background:linear-gradient(180deg, rgba(123,79,208,.10), transparent);
+  }
+  .cta h2{font-size:19px; font-weight:500; margin-bottom:8px}
+  .cta p{color:var(--mist-dim); font-size:13.5px; margin-bottom:18px; line-height:1.7}
+  .cta-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+  .btn{
+    display:inline-block; text-decoration:none; font-size:14px; font-weight:600;
+    padding:12px 22px; border-radius:12px; letter-spacing:.02em; transition:.22s;
+  }
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 26px -10px var(--accent)}
+  .btn-ghost{border:1px solid var(--line); color:var(--mist)}
+  .btn-ghost:hover{border-color:var(--amethyst-glow); color:#fff}
+
+  footer{text-align:center; padding:26px 20px 40px; color:var(--mist-dim); font-size:12px}
+
+  @media (max-width:560px){
+    .topbar{padding:14px 18px}
+    .back{font-size:12px}
+    .stage{padding:4px 16px 44px}
+    .q{font-size:13px;padding:10px 13px;flex:1 1 calc(50% - 5px)}
+    .caption{display:none}
+    .eyebrow{letter-spacing:.28em}
+    .status{left:10px;bottom:10px;font-size:11px;padding:5px 10px}
+    .cta{padding:24px 16px;margin-top:34px}
+    .cta-row .btn{flex:1 1 100%}
+  }
+  @media (max-width:380px){
+    .q{flex:1 1 100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="wordmark" href="/index.html">EU<em>LIM</em></a>
+  <a class="back" href="/portfolio.dc.html">포트폴리오 보기 →</a>
+</nav>
+
+<main class="stage">
+  <div class="eyebrow">Interactive Portfolio</div>
+  <h1>안녕하세요, <b>eulim</b>의 AI 아바타입니다</h1>
+  <p class="sub">22년 차 서비스 기획자가 궁금하시다면, 아래 질문을 눌러보세요</p>
+
+  <div class="screen">
+    <video id="idle" class="show" autoplay loop muted playsinline preload="auto"></video>
+    <video id="answer" playsinline></video>
+    <div class="halo"></div>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">대기 중</span></div>
+    <div class="caption" id="caption"></div>
+
+    <div class="placeholder" id="placeholder">
+      <p>영상 파일을 <code>clips/</code> 폴더에 넣고<br>같은 위치에서 이 페이지를 열면 아바타가 나타납니다.</p>
+    </div>
+  </div>
+
+  <div class="rail">
+    <div class="rail-label">질문 선택</div>
+    <div class="groups" id="groups"></div>
+  </div>
+
+  <section class="cta">
+    <h2>아바타가 다 답하지 못한 이야기가 있다면</h2>
+    <p>이 아바타의 기획·대본·제작도 eulim이 AI와 함께 직접 만들었습니다.<br>실제 대화는 언제나 열려 있어요.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:biblical@naver.com">이메일 보내기</a>
+      <a class="btn btn-ghost" href="/portfolio.dc.html">포트폴리오 전체 보기</a>
+    </div>
+  </section>
+</main>
+
+<footer>© eulim · AI-crafted interactive portfolio</footer>
+
+<script>
+/* ===========================================================
+   클립 목록: file 값에 clips/ 폴더의 영상 파일명을 넣으세요.
+   빈 문자열("")이면 '준비중'으로 표시됩니다.
+   =========================================================== */
+const IDLE_SRC = "/avatar/clips/idle.mp4";
+const CLIPS = [
+  { group:"먼저 만나보기", items:[
+    { label:"자기소개",            file:"/avatar/clips/A1_opening.mp4" },
+    { label:"마무리 인사",          file:"/avatar/clips/A3_closing.MP4" },
+  ]},
+  { group:"eulim은 어떤 사람인가요", items:[
+    { label:"한마디로 어떤 기획자?", file:"/avatar/clips/B1_intro.MP4" },
+    { label:"커리어 요약",          link:"/portfolio.dc.html" },
+  ]},
+  { group:"경력 · 전문성", items:[
+    { label:"AI 역량",             file:"/avatar/clips/C3_ai.MP4" },
+    { label:"대표 프로젝트",        link:"/portfolio.dc.html#lookbook" },
+  ]},
+  { group:"채용 담당자 질문", items:[
+    { label:"왜 채용해야 하나요?",   file:"/avatar/clips/D1_hire.MP4" },
+    { label:"원하는 포지션은?",      file:"/avatar/clips/D2_position.MP4" },
+  ]},
+  { group:"조금 더 개인적으로", items:[
+    { label:"가장 중요한 가치",      file:"/avatar/clips/E1_value.mp4" },
+    { label:"앞으로 하고 싶은 일",   file:"/avatar/clips/E2_future.mp4" },
+  ]},
+];
+
+const idle = document.getElementById('idle');
+const answer = document.getElementById('answer');
+const placeholder = document.getElementById('placeholder');
+const statusEl = document.getElementById('status');
+const statusText = document.getElementById('statusText');
+const caption = document.getElementById('caption');
+let activeBtn = null;
+
+idle.src = IDLE_SRC;
+function hidePlaceholder(){ placeholder.style.display='none'; }
+['loadeddata','canplay','playing'].forEach(ev=>{
+  idle.addEventListener(ev, ()=>{ hidePlaceholder(); idle.play().catch(()=>{}); });
+});
+answer.addEventListener('playing', hidePlaceholder);
+/* iOS: 첫 터치 시 대기영상 재생 재시도 */
+document.addEventListener('touchstart', function once(){
+  idle.play().catch(()=>{});
+  document.removeEventListener('touchstart', once);
+}, {passive:true});
+
+function toIdle(){
+  answer.classList.remove('show');
+  idle.classList.add('show');
+  statusEl.classList.remove('speaking');
+  statusText.textContent = '대기 중';
+  caption.classList.remove('show');
+  if(activeBtn){ activeBtn.classList.remove('active'); activeBtn.classList.add('played'); activeBtn=null; }
+}
+
+function playClip(file, btn, label){
+  if(!file) return;
+  if(activeBtn) activeBtn.classList.remove('active');
+  activeBtn = btn; btn.classList.add('active');
+  statusText.textContent = '불러오는 중...';
+  answer.src = file;
+  answer.onloadeddata = ()=>{
+    idle.classList.remove('show');
+    answer.classList.add('show');
+    statusEl.classList.add('speaking');
+    statusText.textContent = '답변 중';
+    caption.textContent = 'Q. ' + label;
+    caption.classList.add('show');
+    answer.currentTime = 0;
+    answer.play().catch(()=>{});
+  };
+  answer.onerror = ()=>{
+    statusText.textContent = '영상 파일 없음: ' + file;
+    if(activeBtn){ activeBtn.classList.remove('active'); activeBtn=null; }
+    setTimeout(()=>{ statusText.textContent = '대기 중'; }, 4000);
+  };
+  answer.onended = toIdle;
+  answer.load();
+  document.querySelector('.screen').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+const groupsEl = document.getElementById('groups');
+CLIPS.forEach(g=>{
+  const wrap = document.createElement('div');
+  const t = document.createElement('div'); t.className='group-title'; t.textContent=g.group;
+  const btns = document.createElement('div'); btns.className='btns';
+  g.items.forEach(it=>{
+    const b = document.createElement('button');
+    b.className='q'; b.type='button';
+    if(it.link){
+      b.classList.add('q-link');
+      b.textContent = it.label;
+      b.addEventListener('click', ()=>window.open(it.link, '_blank', 'noopener'));
+    }else{
+      b.textContent = it.label;
+      if(!it.file) b.dataset.missing="1";
+      b.addEventListener('click', ()=>playClip(it.file, b, it.label));
+    }
+    btns.appendChild(b);
+  });
+  wrap.appendChild(t); wrap.appendChild(btns); groupsEl.appendChild(wrap);
+});
+</script>
+</body>
+</html>
