@@ -1,0 +1,68 @@
+# ═══════════════════════════════════════════════════════════════
+#  .assetsignore — Cloudflare Workers 정적 배포 제외 목록
+#
+#  wrangler.jsonc 의 assets.directory 가 "." 이라
+#  이 파일에 적히지 않은 모든 것이 공개 웹에 올라갑니다.
+#  새 파일·폴더를 추가할 때마다 여기도 함께 점검하세요.
+# ═══════════════════════════════════════════════════════════════
+
+# ── 원본 소스 (주석·설계 근거 포함, 절대 공개 금지) ──────────
+_src/
+_src/**
+
+# ── 빌드 도구 / 설정 ──────────────────────────────────────────
+build.mjs
+deploy-cf.bat
+wrangler.jsonc
+wrangler.toml
+package.json
+package-lock.json
+.assetsignore
+
+# ── 개발 부산물 ───────────────────────────────────────────────
+node_modules/
+node_modules/**
+.wrangler/
+.wrangler/**
+.git/
+.git/**
+.gitignore
+.vscode/
+.vscode/**
+.idea/
+.idea/**
+
+# ── 작업 자료 ─────────────────────────────────────────────────
+*.md
+*.psd
+*.ai
+*.sketch
+*.fig
+*.zip
+*.bak
+*.log
+*.tmp
+
+# ── OS 부산물 ─────────────────────────────────────────────────
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ── 폐기 예정 (기존 링크 캐시 만료 후 파일째 삭제) ────────────
+# og-pilot.jpg
+
+# ── 내부 문서 · 작업 부산물 (공개 금지) ──────────────────────
+# 어떤 페이지에서도 링크하지 않는데 URL 만 알면 받아지던 것들.
+*.docx
+*.doc
+*.pptx
+*.xlsx
+*.hwp
+*.py
+*.bat
+*.thumbnail
+OPS/uploads/
+OPS/uploads/**
+_to_delete/
+_to_delete/**
+assetsignore

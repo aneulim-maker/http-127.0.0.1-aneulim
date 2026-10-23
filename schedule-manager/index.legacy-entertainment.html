@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>스케줄 매니저 — 프로젝트 · 정산 · 리포트 통합</title>
+<!-- 링크 공유 미리보기 (Open Graph) -->
+<link rel="canonical" href="https://eulim.dataplaner.workers.dev/schedule-manager/index.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="eulim" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="eulim Pilot · 스케줄 매니저" />
+<meta property="og:description" content="프로젝트 · 정산 · 리포트를 통합 관리하는 파일럿 애플리케이션. 간트차트 · 칸반 · 달력 지원." />
+<meta property="og:image" content="https://eulim.dataplaner.workers.dev/og-pilot.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="eulim — 파일럿 애플리케이션" />
+<meta property="og:url" content="https://eulim.dataplaner.workers.dev/schedule-manager/index.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://eulim.dataplaner.workers.dev/og-pilot.jpg" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -527,6 +541,12 @@
 <script>
 // ============= STATE =============
 const STORE_KEY = 'baro-mgmt-v1';
+
+// ===== 문서 발행 주체 (포트폴리오 시연용 더미) =====
+// 실제 도입 시 아래 3줄만 교체하면 정산서 전체에 반영됩니다.
+const ORG_NAME    = '데모 매니지먼트';
+const ORG_NAME_EN = 'DEMO MANAGEMENT';
+const ORG_CODE    = 'DM';
 let state = {
   projects: [],
   milestones: [],
@@ -2068,7 +2088,7 @@ function exportSettlementPDF(scope) {
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>바로엔터테인먼트 정산서 ${periodLabel}</title>
+<title>${ORG_NAME} 정산서 ${periodLabel}</title>
 <style>
   @page { size: A4; margin: 15mm; }
   * { box-sizing: border-box; }
@@ -2111,11 +2131,11 @@ function exportSettlementPDF(scope) {
 <button class="print-btn" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
 
 <div class="doc-header">
-  <div class="company">바로엔터테인먼트 · BARO ENTERTAINMENT</div>
+  <div class="company">${ORG_NAME} · ${ORG_NAME_EN}</div>
   <h1>${scope === 'month' ? '월별' : '연간'} 정산서</h1>
   <div class="period">${periodLabel}  ·  ${projectScope}</div>
   <div class="meta">
-    <span>문서번호: BE-STL-${year}${scope === 'month' ? String(month+1).padStart(2,'0') : 'A'}-${state.selectedProjectId ? state.selectedProjectId.slice(0,4).toUpperCase() : 'ALL'}</span>
+    <span>문서번호: ${ORG_CODE}-STL-${year}${scope === 'month' ? String(month+1).padStart(2,'0') : 'A'}-${state.selectedProjectId ? state.selectedProjectId.slice(0,4).toUpperCase() : 'ALL'}</span>
     <span>발행일: ${today}</span>
   </div>
 </div>
@@ -2259,12 +2279,13 @@ ${scope === 'year' ? `
 <div class="seal">
   위와 같이 ${periodLabel} 정산 내역을 보고합니다.<br><br>
   ${today}<br><br>
-  바로엔터테인먼트  ·  작성자: <span class="line"></span>  ·  확인: <span class="line"></span>
+  ${ORG_NAME}  ·  작성자: <span class="line"></span>  ·  확인: <span class="line"></span>
 </div>
 
 <div class="footer">
-  본 문서는 바로엔터테인먼트 매니지먼트 스케줄 시스템에서 자동 생성되었습니다.<br>
-  ※ 원천징수율은 프로젝트별 설정값(기본 3.3%) 기준이며, 실제 세무 정산과 차이가 있을 수 있습니다.
+  본 문서는 ${ORG_NAME} 스케줄 시스템에서 자동 생성되었습니다.<br>
+  ※ 원천징수율은 프로젝트별 설정값(기본 3.3%) 기준이며, 실제 세무 정산과 차이가 있을 수 있습니다.<br>
+  ※ 본 문서는 eulim studio 포트폴리오 시연용 샘플이며, 실제 정산 효력이 없습니다.
 </div>
 
 <` + `script>
@@ -2384,5 +2405,14 @@ render();
 checkReminders();
 setInterval(checkReminders, 60000);
 </script>
+<!-- ===== eulim 돌아가기 (필요 없으면 이 블록만 통째로 삭제하세요) ===== -->
+<div id="eulim-back" style="position:fixed;left:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(15,15,15,.84);backdrop-filter:blur(8px);box-shadow:0 8px 24px -10px rgba(0,0,0,.55);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px;font-weight:600;letter-spacing:.02em">
+  <a href="/" style="color:#fff;text-decoration:none">← eulim 포트폴리오</a>
+  <span style="color:rgba(255,255,255,.35)">·</span>
+  <a href="/#contact" style="color:#f06449;text-decoration:none">문의하기</a>
+</div>
+<!-- ===== /eulim 돌아가기 ===== -->
+
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "26d90b7ff36944ca843fbf629d41d2df"}'></script>
 </body>
 </html>

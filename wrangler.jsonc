@@ -1,0 +1,24 @@
+{
+  // ── eulim-site 정적 배포 설정 ──────────────────────────────
+  // 브라우저 업로더 대신 wrangler 로 올립니다.
+  //   · 모든 파일 형식을 지원합니다 (mp4·webm·webp·wav·vcf …)
+  //   · 바뀐 파일만 올립니다 (매번 168MB를 다시 올리지 않습니다)
+  //   · .assetsignore 를 지켜 비공개 파일을 걸러냅니다
+  //
+  //  name 은 대시보드의 워커 이름(eulim)과 같습니다 →
+  //  배포하면 https://eulim.dataplaner.workers.dev 가 그대로 갱신됩니다.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "eulim",
+  "account_id": "ab78e46e7f5be95962b8c0cdb70829a9",
+  "compatibility_date": "2026-08-30",
+
+  // 코드 없이 정적 파일만 서빙합니다 (assets-only Worker).
+  "assets": {
+    "directory": ".",
+    // 확장자 없는 주소(/case-lms → case-lms.html)를 자동으로 맞춰 줍니다.
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+
+  "observability": { "enabled": true }
+}
