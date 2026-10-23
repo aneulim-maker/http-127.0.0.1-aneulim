@@ -368,7 +368,7 @@ aside.open{transform:translateX(0)}
 </div>
 <nav id="nav"><button data-view="dashboard" class="active">대시보드</button> <button data-view="people">인력관리</button> <button data-view="gantt">일정</button> <button data-view="kanban">업무보드</button> <button data-view="agentops">에이전트 과업</button> <button data-view="calendar">달력</button> <button data-view="contract">계약관리</button> <button data-view="settlement">정산관리</button> <button data-view="cost">비용관리</button> <button data-view="aisim">AI 인력산정</button>
 </nav>
-<div class="top-actions"><button class="btn btn-ghost" id="noticeBtn" onclick="openInbox()" title="통보 알림함">🔔<span> 알림함</span><b class="nbadge" id="noticeBadge" style="display:none">0</b></button> <button class="btn btn-primary" onclick="openTaskModal()">+ <span>업무</span></button> <button class="btn btn-ghost" onclick="exportWorkbook()" title="전체 데이터를 엑셀(.xlsx)로 내보냅니다"><span>엑셀 내보내기</span>↓</button> <button class="btn btn-ghost" onclick="exportData()" title="JSON 백업 (형상 보관용)">{&nbsp;}</button> <button class="btn btn-ghost" onclick='document.getElementById("importFile").click()' title="엑셀(.xlsx) 또는 JSON 백업을 불러옵니다"><span>가져오기</span>↑</button> <input type="file" id="importFile" style="display:none" accept=".xlsx,.xls,.json" onchange="importData(event)">
+<div class="top-actions"><button class="btn btn-ghost" id="noticeBtn" onclick="openInbox()" title="통보 알림함">🔔<span> 알림함</span><b class="nbadge" id="noticeBadge" style="display:none">0</b></button> <button class="btn btn-primary" onclick="openTaskModal()">+ <span>업무</span></button> <button class="btn btn-ghost" onclick="exportWorkbook()" title="전체 데이터를 엑셀(.xlsx)로 내보냅니다"><span>엑셀 내보내기</span>↓</button> <button class="btn btn-ghost" onclick="exportData()" title="JSON 백업 (형상 보관용)">{&nbsp;}</button> <button class="btn btn-ghost" onclick='document.getElementById("importFile").click()' title="엑셀(.xlsx) 또는 JSON 백업을 불러옵니다"><span>가져오기</span>↑</button> <button class="btn btn-ghost" onclick="openAutoBackupRestore()" title="저장할 때마다 자동으로 쌓인 백업(최근 10개)에서 복원"><span>자동백업</span></button> <input type="file" id="importFile" style="display:none" accept=".xlsx,.xls,.json" onchange="importData(event)">
 </div>
 </header>
 <div class="scrim" id="scrim" onclick="toggleSide()">
@@ -1409,6 +1409,110 @@ const QUOTA_WARN = 3670016;
 
 let quotaWarned = !1;
 
+/* ── 자동 백업(IndexedDB) ──────────────────────────────────────
+   localStorage(STORE_KEY)는 한 곳뿐이라 캐시 삭제·기기 교체·손상에
+   무방비였다. save() 성공마다 일정 간격(기본 10분)으로 별도 저장소
+   (IndexedDB)에 그 시점의 전체 state를 복사해 두고, 오래된 것은
+   자동으로 정리한다. 수동 [JSON 백업]을 대체하지 않고 보완한다. */
+const BACKUP_DB_NAME = "si-workforce-backups", BACKUP_STORE = "snapshots", BACKUP_MAX = 10, BACKUP_MIN_INTERVAL_MS = 6e5;
+
+let backupDbPromise = null, lastAutoBackupAt = 0, loadWasCorrupted = !1;
+
+function openBackupDB() {
+  return backupDbPromise || (backupDbPromise = new Promise((res, rej) => {
+    if ("undefined" == typeof indexedDB) return rej(new Error("indexedDB 사용 불가"));
+    const req = indexedDB.open(BACKUP_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      req.result.objectStoreNames.contains(BACKUP_STORE) || req.result.createObjectStore(BACKUP_STORE, {
+        keyPath: "at"
+      });
+    }, req.onsuccess = () => res(req.result), req.onerror = () => rej(req.error);
+  }).catch(e => {
+    throw backupDbPromise = null, e;
+  }));
+}
+
+function listAutoBackups(db) {
+  return new Promise((res, rej) => {
+    const req = db.transaction(BACKUP_STORE, "readonly").objectStore(BACKUP_STORE).getAll();
+    req.onsuccess = () => res((req.result || []).sort((a, b) => b.at.localeCompare(a.at))),
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function pruneAutoBackups(db, list) {
+  if (list.length <= BACKUP_MAX) return;
+  const tx = db.transaction(BACKUP_STORE, "readwrite"), store = tx.objectStore(BACKUP_STORE);
+  list.slice(BACKUP_MAX).forEach(b => store.delete(b.at));
+}
+
+async function writeAutoBackup(json) {
+  try {
+    const db = await openBackupDB();
+    await new Promise((res, rej) => {
+      const tx = db.transaction(BACKUP_STORE, "readwrite");
+      tx.objectStore(BACKUP_STORE).put({
+        at: (new Date).toISOString(),
+        data: json
+      }), tx.oncomplete = res, tx.onerror = () => rej(tx.error);
+    });
+    pruneAutoBackups(db, await listAutoBackups(db));
+  } catch (e) {}
+}
+
+function maybeAutoBackup(json) {
+  const now = Date.now();
+  now - lastAutoBackupAt >= BACKUP_MIN_INTERVAL_MS && (lastAutoBackupAt = now, writeAutoBackup(json));
+}
+
+async function latestAutoBackup() {
+  try {
+    return (await listAutoBackups(await openBackupDB()))[0] || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/* 수동 — 쌓인 자동 백업 중 하나를 골라 복원 (손상 없이도 언제든 사용 가능) */
+async function openAutoBackupRestore() {
+  let list;
+  try {
+    list = await listAutoBackups(await openBackupDB());
+  } catch (e) {
+    return toast("이 브라우저에서는 자동 백업을 쓸 수 없습니다");
+  }
+  if (!list.length) return toast("자동 백업이 아직 없습니다 — 저장이 쌓이면(10분 간격) 자동으로 생깁니다");
+  const lines = list.map((b, i) => `${i + 1}. ${new Date(b.at).toLocaleString()}`).join("\n"), pick = prompt(`복원할 자동 백업 번호를 입력하세요 (취소=복원 안 함)\n\n${lines}`, "1");
+  if (!pick) return;
+  const chosen = list[parseInt(pick, 10) - 1];
+  if (!chosen) return toast("잘못된 번호입니다");
+  if (!confirm(`${new Date(chosen.at).toLocaleString()} 시점으로 복원합니다.\n현재 데이터는 덮어씌워집니다. 계속할까요?`)) return;
+  try {
+    state = {
+      ...state,
+      ...JSON.parse(chosen.data)
+    }, migrate(), save(), render(), toast("자동 백업으로 복원했습니다 — " + new Date(chosen.at).toLocaleString());
+  } catch (e) {
+    toast("백업 복원 실패: " + e.message);
+  }
+}
+
+/* load()가 저장 데이터 파싱 실패를 감지했을 때 — 조용히 넘어가지 않고
+   자동 백업이 있으면 복원을 제안, 없으면 손실 사실을 명확히 알린다. */
+async function warnIfCorrupted() {
+  if (!loadWasCorrupted) return;
+  const backup = await latestAutoBackup();
+  if (!backup) return toast("⚠ 저장된 데이터가 손상되어 읽지 못했습니다 — 받아둔 백업 파일이 있다면 [가져오기]로 복원하세요");
+  if (confirm(`⚠ 저장된 데이터를 읽는 데 실패했습니다(손상됨).\n\n${new Date(backup.at).toLocaleString()}에 자동 저장된 백업이 있습니다. 이 백업으로 복원할까요?\n\n(취소하면 초기 데모 데이터로 시작합니다.)`)) try {
+    state = {
+      ...state,
+      ...JSON.parse(backup.data)
+    }, migrate(), save(), render(), toast("자동 백업으로 복원했습니다 — " + new Date(backup.at).toLocaleString());
+  } catch (e) {
+    toast("백업 복원 실패: " + e.message);
+  } else toast("⚠ 데이터 손상으로 초기 상태로 시작합니다 — 받아둔 백업 파일이 있다면 [가져오기]로 복원하세요");
+}
+
 function save() {
   let e;
   try {
@@ -1418,7 +1522,7 @@ function save() {
   }
   e.length > 3670016 && !quotaWarned && (quotaWarned = !0, toast("저장 용량이 한계에 근접했습니다 — 엑셀로 내보낸 뒤 오래된 검수 기록을 정리하세요"));
   try {
-    return localStorage.setItem(STORE_KEY, e), !0;
+    return localStorage.setItem(STORE_KEY, e), maybeAutoBackup(e), !0;
   } catch (e) {
     return toast("⚠ 저장 실패 — 브라우저 저장 용량 초과. 엑셀로 내보낸 뒤 기록을 정리하십시오"), !1;
   }
@@ -1434,7 +1538,9 @@ function load() {
       ...state,
       ...JSON.parse(e)
     };
-  } catch (e) {}
+  } catch (t) {
+    loadWasCorrupted = !0;
+  }
   state.rates = {
     ...DEFAULT_RATES,
     ...state.rates || {}
@@ -1445,7 +1551,7 @@ function load() {
   const t = new URLSearchParams(location.search);
   t.get("view") && [ "dashboard", "people", "gantt", "kanban", "agentops", "calendar", "contract", "settlement", "cost", "aisim" ].includes(t.get("view")) && (state.view = t.get("view"));
   const n = t.get("project");
-  if ("all" === n ? state.selectedProjectId = null : n && (state.selectedProjectId = n), 
+  if ("all" === n ? state.selectedProjectId = null : n && (state.selectedProjectId = n),
   t.get("tab")) {
     const e = t.get("tab");
     "people" === state.view ? state.peopleTab = e : "settlement" === state.view ? state.settleTab = e : "cost" === state.view && (state.costTab = e);
@@ -5385,6 +5491,20 @@ function exportData() {
   }, null, 2), `si-manager-${todayStr()}.json`, "application/json"), toast("데이터를 내보냈습니다");
 }
 
+/* 가져오기 전 최소 구조 검증 — JSON 자체는 유효해도 다른 앱 파일이거나
+   필드가 깨져 있으면(배열이어야 할 항목이 문자열 등) 덮어쓰기 전에 막는다.
+   버전 간 필드 차이는 migrate()가 흡수하므로 여기서는 "있는 항목이 올바른
+   형태인가"만 본다 — 구버전/신버전 파일을 부당하게 막지 않는다. */
+const IMPORT_ARRAY_FIELDS = [ "projects", "contracts", "milestones", "tasks", "members", "categories", "assignments", "expenses", "reviews", "reviewRollups", "notices", "noticeActions" ];
+
+function validateImportShape(obj) {
+  if (!obj || "object" != typeof obj || Array.isArray(obj)) return "최상위가 객체 형식이 아닙니다";
+  const present = IMPORT_ARRAY_FIELDS.filter(k => k in obj);
+  if (!present.length) return "알아볼 수 있는 데이터 항목이 없습니다 (projects·tasks·members 등)";
+  for (const k of present) if (!Array.isArray(obj[k])) return `"${k}" 항목이 목록(배열) 형식이 아닙니다`;
+  return null;
+}
+
 function importData(e) {
   const t = e.target.files[0];
   if (!t) return;
@@ -5392,7 +5512,8 @@ function importData(e) {
   const n = new FileReader;
   n.onload = e => {
     try {
-      const t = JSON.parse(e.target.result);
+      const t = JSON.parse(e.target.result), err = validateImportShape(t);
+      if (err) return toast("⚠ 가져오기 취소 — 파일 구조가 올바르지 않습니다: " + err);
       if (!confirm("현재 데이터를 덮어씁니다. 계속할까요?")) return;
       state = {
         ...state,
@@ -5969,6 +6090,6 @@ document.querySelectorAll("#nav button").forEach(e => {
   e.addEventListener("mousedown", t => {
     t.target === e && e.classList.remove("active");
   });
-}), load(), processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4);
+}), load(), processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), warnIfCorrupted();
 </script><div id="eulim-back" style="position:fixed;left:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(15,15,15,.84);backdrop-filter:blur(8px);box-shadow:0 8px 24px -10px rgba(0,0,0,.55);font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px;font-weight:600;letter-spacing:.02em"><a href="/" style="color:#fff;text-decoration:none">← eulim 포트폴리오</a> <span style="color:rgba(255,255,255,.35)">·</span> <a href="/#contact" style="color:#f06449;text-decoration:none">문의하기</a></div><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "26d90b7ff36944ca843fbf629d41d2df"}'></script><script>/*! Agent UX · 사람+에이전트 프로젝트 매니저 — (c) 2026 eulim. All rights reserved. | EU-AUX-260917-A4 */
 !function(){try{console.log("%cAgent UX · 사람+에이전트 프로젝트 매니저%c\n(c) 2026 eulim · All rights reserved.\n무단 복제·배포·상업적 이용을 금합니다.\n문의 biblical@naver.com · Build EU-AUX-260917-A4","color:#8B7CF6;font-weight:700;font-size:13px","color:#8A90AD;font-size:11px")}catch(o){}}()</script></body></html>
