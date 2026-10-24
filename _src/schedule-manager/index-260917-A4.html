@@ -359,6 +359,19 @@ aside.open{transform:translateX(0)}
 </style>
 </head>
 <body>
+<!-- Phase 2 M4 — 로그인 오버레이. 세션 없으면 이게 전체를 덮는다. -->
+<div id="loginOverlay" style="position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;background:#0b0b10;color:#fff;font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<form onsubmit="doAppLogin(event)" style="width:320px;padding:28px;border-radius:14px;background:#15151d;box-shadow:0 20px 60px -20px rgba(0,0,0,.6)">
+<h2 style="margin:0 0 4px;font-size:18px">Agent UX 로그인</h2>
+<div style="font-size:12.5px;color:#9a9aab;margin-bottom:18px">이름과 팀 공용 비밀번호를 입력하세요</div>
+<label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">이름</label>
+<input id="loginName" type="text" autocomplete="username" style="width:100%;box-sizing:border-box;padding:9px 11px;border-radius:7px;border:1px solid #2a2a36;background:#0f0f15;color:#fff;margin-bottom:12px">
+<label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">비밀번호</label>
+<input id="loginPassword" type="password" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding:9px 11px;border-radius:7px;border:1px solid #2a2a36;background:#0f0f15;color:#fff;margin-bottom:16px">
+<button id="loginBtn" type="submit" style="width:100%;padding:10px;border:none;border-radius:7px;background:#3355ff;color:#fff;font-weight:700;cursor:pointer">로그인</button>
+<div id="loginError" style="margin-top:10px;font-size:12.5px;color:#ff6a6a;min-height:16px"></div>
+</form>
+</div>
 <header class="topbar"><button class="menu-toggle" onclick="toggleSide()">☰</button>
 <div class="brand"><span class="mark">AX</span>
 <div>
@@ -368,7 +381,7 @@ aside.open{transform:translateX(0)}
 </div>
 <nav id="nav"><button data-view="dashboard" class="active">대시보드</button> <button data-view="people">인력관리</button> <button data-view="gantt">일정</button> <button data-view="kanban">업무보드</button> <button data-view="agentops">에이전트 과업</button> <button data-view="calendar">달력</button> <button data-view="contract">계약관리</button> <button data-view="settlement">정산관리</button> <button data-view="cost">비용관리</button> <button data-view="aisim">AI 인력산정</button>
 </nav>
-<div class="top-actions"><button class="btn btn-ghost" id="noticeBtn" onclick="openInbox()" title="통보 알림함">🔔<span> 알림함</span><b class="nbadge" id="noticeBadge" style="display:none">0</b></button> <button class="btn btn-primary" onclick="openTaskModal()">+ <span>업무</span></button> <button class="btn btn-ghost" onclick="exportWorkbook()" title="전체 데이터를 엑셀(.xlsx)로 내보냅니다"><span>엑셀 내보내기</span>↓</button> <button class="btn btn-ghost" onclick="exportData()" title="JSON 백업 (형상 보관용)">{&nbsp;}</button> <button class="btn btn-ghost" onclick='document.getElementById("importFile").click()' title="엑셀(.xlsx) 또는 JSON 백업을 불러옵니다"><span>가져오기</span>↑</button> <button class="btn btn-ghost" onclick="openAutoBackupRestore()" title="저장할 때마다 자동으로 쌓인 백업(최근 10개)에서 복원"><span>자동백업</span></button> <input type="file" id="importFile" style="display:none" accept=".xlsx,.xls,.json" onchange="importData(event)">
+<div class="top-actions"><button class="btn btn-ghost" id="noticeBtn" onclick="openInbox()" title="통보 알림함">🔔<span> 알림함</span><b class="nbadge" id="noticeBadge" style="display:none">0</b></button> <button class="btn btn-primary" onclick="openTaskModal()">+ <span>업무</span></button> <button class="btn btn-ghost" onclick="exportWorkbook()" title="전체 데이터를 엑셀(.xlsx)로 내보냅니다"><span>엑셀 내보내기</span>↓</button> <button class="btn btn-ghost" onclick="exportData()" title="JSON 백업 (형상 보관용)">{&nbsp;}</button> <button class="btn btn-ghost" onclick='document.getElementById("importFile").click()' title="엑셀(.xlsx) 또는 JSON 백업을 불러옵니다"><span>가져오기</span>↑</button> <button class="btn btn-ghost" onclick="openAutoBackupRestore()" title="저장할 때마다 자동으로 쌓인 백업(최근 10개)에서 복원"><span>자동백업</span></button> <button class="btn btn-ghost" onclick="doAppLogout()" title="로그아웃"><span id="currentUserLabel">로그아웃</span></button> <input type="file" id="importFile" style="display:none" accept=".xlsx,.xls,.json" onchange="importData(event)">
 </div>
 </header>
 <div class="scrim" id="scrim" onclick="toggleSide()">
@@ -1409,6 +1422,16 @@ const QUOTA_WARN = 3670016;
 
 let quotaWarned = !1;
 
+/* ── Phase 2 M4 — 서버 동기화 상태 ──────────────────────────────
+   currentUser: 로그인 성공 시 {memberId,name,role}, 아니면 null.
+   lastSyncedSnapshot: 마지막으로 서버와 맞춘 시점의 동기화 대상
+   필드 사본 — save()가 이것과 지금 state를 비교해 바뀐 레코드만
+   골라 레코드 단위 API를 부른다(PHASE2_DESIGN.md 7장의 "diffing" 대안). */
+let currentUser = null, lastSyncedSnapshot = null, serverSyncInFlight = !1, serverSyncQueued = !1;
+
+const SYNCED_ARRAY_KEYS = [ "projects", "contracts", "milestones", "tasks", "members", "categories", "assignments", "expenses", "reviews", "notices" ];
+const SYNCED_SETTINGS_KEYS = [ "rates", "aiRates", "aiStage", "aiReinvest", "aiCost", "aiInvoices", "aiScope", "reviewSlaDays" ];
+
 /* ── 자동 백업(IndexedDB) ──────────────────────────────────────
    localStorage(STORE_KEY)는 한 곳뿐이라 캐시 삭제·기기 교체·손상에
    무방비였다. save() 성공마다 일정 간격(기본 10분)으로 별도 저장소
@@ -1513,6 +1536,9 @@ async function warnIfCorrupted() {
   } else toast("⚠ 데이터 손상으로 초기 상태로 시작합니다 — 받아둔 백업 파일이 있다면 [가져오기]로 복원하세요");
 }
 
+/* save() — 로컬 저장(Phase 1 그대로: localStorage + IndexedDB 자동백업)은
+   동기로 즉시 끝내고, 서버 동기화는 백그라운드로 흘려보낸다. 호출하는
+   쪽(43곳)은 하나도 안 바뀐다 — 여전히 state를 고치고 save()만 부르면 됨. */
 function save() {
   let e;
   try {
@@ -1521,26 +1547,43 @@ function save() {
     return toast("⚠ 저장 직렬화에 실패했습니다"), !1;
   }
   e.length > 3670016 && !quotaWarned && (quotaWarned = !0, toast("저장 용량이 한계에 근접했습니다 — 엑셀로 내보낸 뒤 오래된 검수 기록을 정리하세요"));
+  let ok;
   try {
-    return localStorage.setItem(STORE_KEY, e), maybeAutoBackup(e), !0;
+    localStorage.setItem(STORE_KEY, e), maybeAutoBackup(e), ok = !0;
   } catch (e) {
-    return toast("⚠ 저장 실패 — 브라우저 저장 용량 초과. 엑셀로 내보낸 뒤 기록을 정리하십시오"), !1;
+    toast("⚠ 저장 실패 — 브라우저 저장 용량 초과. 엑셀로 내보낸 뒤 기록을 정리하십시오"), ok = !1;
   }
+  currentUser && queueServerSync();
+  return ok;
 }
 
-function load() {
-  let e = null;
-  try {
-    e = localStorage.getItem(STORE_KEY);
-  } catch (e) {}
-  if (e) try {
-    state = {
-      ...state,
-      ...JSON.parse(e)
-    };
-  } catch (t) {
-    loadWasCorrupted = !0;
+/* load() — 이제 localStorage가 아니라 서버가 진실의 원천. 세션 없으면
+   로그인 화면만 띄우고 false를 돌려줘, 호출부(부트스트랩)가 거기서 멈춘다.
+   로그인 성공 뒤엔 bootAfterLogin()이 다시 이 함수를 부른다. */
+async function load() {
+  const who = await apiWhoami().catch(() => null);
+  if (!who || !who.ok) {
+    return showLoginScreen(), !1;
   }
+  currentUser = {
+    memberId: who.memberId,
+    name: who.name,
+    role: who.role
+  };
+  updateUserLabel();
+
+  const result = await apiFetchState().catch(() => null);
+  if (!result || !result.ok) {
+    return showLoginScreen("데이터를 불러오지 못했습니다 — 새로고침해 주세요"), !1;
+  }
+
+  state = {
+    ...state,
+    ...result.state
+  };
+  lastSyncedSnapshot = snapshotSyncedState();
+  hideLoginScreen();
+
   state.rates = {
     ...DEFAULT_RATES,
     ...state.rates || {}
@@ -1556,9 +1599,247 @@ function load() {
     const e = t.get("tab");
     "people" === state.view ? state.peopleTab = e : "settlement" === state.view ? state.settleTab = e : "cost" === state.view && (state.costTab = e);
   }
-  0 === state.projects.length && seed();
+  // 팀원은 대시보드가 막힐 예정(M5) — 기본 화면을 일정으로 돌림(PHASE2_DESIGN.md 1.2)
+  "admin" !== currentUser.role && "dashboard" === state.view && (state.view = "gantt");
+
   const m = migrate();
   (m.converted || m.events.length) && save();
+
+  return !0;
+}
+
+/* ── 로그인 화면 ─────────────────────────────────────────────── */
+
+function showLoginScreen(message) {
+  const el = document.getElementById("loginOverlay");
+  el && (el.style.display = "flex");
+  const err = document.getElementById("loginError");
+  err && (err.textContent = message || "");
+}
+
+function hideLoginScreen() {
+  const el = document.getElementById("loginOverlay");
+  el && (el.style.display = "none");
+}
+
+function updateUserLabel() {
+  const el = document.getElementById("currentUserLabel");
+  el && currentUser && (el.textContent = `${currentUser.name} · 로그아웃`);
+}
+
+async function doAppLogin(ev) {
+  ev && ev.preventDefault();
+  const name = document.getElementById("loginName").value.trim(), password = document.getElementById("loginPassword").value;
+  if (!name || !password) return void showLoginScreen("이름과 비밀번호를 입력하세요");
+  const btn = document.getElementById("loginBtn");
+  btn && (btn.disabled = !0);
+  try {
+    const r = await apiLogin(name, password);
+    if (!r.ok) return void showLoginScreen("로그인 실패 — 이름 또는 비밀번호를 확인하세요");
+    await bootAfterLogin();
+  } catch (e) {
+    showLoginScreen("네트워크 오류: " + e.message);
+  } finally {
+    btn && (btn.disabled = !1);
+  }
+}
+
+async function doAppLogout() {
+  confirm("로그아웃할까요?") && (await apiLogout(), currentUser = null, location.reload());
+}
+
+/* 로그인 성공 직후 — 부트스트랩 시퀀스 중 load() 이후 단계를 그대로 반복 */
+async function bootAfterLogin() {
+  const ok = await load();
+  ok && (processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), warnIfCorrupted());
+}
+
+/* ── API 헬퍼 ────────────────────────────────────────────────── */
+
+async function apiJson(url, options) {
+  const res = await fetch(url, {
+    credentials: "same-origin",
+    ...options
+  });
+  let body = null;
+  try {
+    body = await res.json();
+  } catch (e) {}
+  return {
+    ok: res.ok,
+    status: res.status,
+    body: body
+  };
+}
+
+function apiWhoami() {
+  return apiJson("/api/whoami").then(r => r.ok ? r.body : null);
+}
+
+function apiLogin(name, password) {
+  return apiJson("/api/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: name,
+      password: password
+    })
+  });
+}
+
+function apiLogout() {
+  return apiJson("/api/logout", {
+    method: "POST"
+  });
+}
+
+function apiFetchState() {
+  return apiJson("/api/state").then(r => r.ok ? r.body : null);
+}
+
+function apiCreate(entity, obj) {
+  return apiJson("/api/" + entity, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(obj)
+  });
+}
+
+function apiUpdate(entity, id, obj, ifUpdatedAt) {
+  return apiJson("/api/" + entity + "/" + encodeURIComponent(id), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      ...obj,
+      ifUpdatedAt: ifUpdatedAt
+    })
+  });
+}
+
+function apiDelete(entity, id) {
+  return apiJson("/api/" + entity + "/" + encodeURIComponent(id), {
+    method: "DELETE"
+  });
+}
+
+function apiNoticeAction(noticeId, type, at) {
+  return apiJson("/api/noticeActions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      noticeId: noticeId,
+      type: type,
+      at: at
+    })
+  });
+}
+
+function apiSettingsPatch(key, value) {
+  return apiJson("/api/settings/" + encodeURIComponent(key), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      value: value
+    })
+  });
+}
+
+/* ── 서버 동기화(diffing) 엔진 ───────────────────────────────────
+   save()가 호출될 때마다 lastSyncedSnapshot(마지막으로 서버와
+   맞춘 사본)과 지금 state를 엔티티별로 비교해, 새로 생긴 레코드는
+   POST, 바뀐 레코드는 PATCH(ifUpdatedAt으로 낙관적 동시성 체크),
+   없어진 레코드는 DELETE로 보낸다. 실패한 레코드는 스냅샷을
+   갱신하지 않아 다음 save() 때 자동으로 다시 시도된다. */
+
+function snapshotSyncedState() {
+  const snap = {};
+  for (const k of SYNCED_ARRAY_KEYS) snap[k] = JSON.parse(JSON.stringify(state[k] || []));
+  snap.noticeActions = JSON.parse(JSON.stringify(state.noticeActions || []));
+  for (const k of SYNCED_SETTINGS_KEYS) snap[k] = JSON.parse(JSON.stringify(state[k] ?? null));
+  return snap;
+}
+
+function queueServerSync() {
+  if (serverSyncInFlight) return void (serverSyncQueued = !0);
+  serverSyncInFlight = !0;
+  syncToServer().catch(e => {
+    toast("⚠ 서버 동기화 실패(로컬엔 저장됨) — " + (e && e.message || e));
+  }).finally(() => {
+    serverSyncInFlight = !1, serverSyncQueued && (serverSyncQueued = !1, queueServerSync());
+  });
+}
+
+async function syncToServer() {
+  if (!currentUser || !lastSyncedSnapshot) return;
+  const prev = lastSyncedSnapshot, next = {};
+  for (const key of SYNCED_ARRAY_KEYS) next[key] = await syncArrayEntity(key, prev[key] || []);
+  next.noticeActions = await syncNoticeActions(prev.noticeActions || []);
+  for (const key of SYNCED_SETTINGS_KEYS) next[key] = await syncSetting(key, prev[key]);
+  lastSyncedSnapshot = next;
+}
+
+function sameRecord(a, b) {
+  const sa = {
+    ...a
+  }, sb = {
+    ...b
+  };
+  return delete sa.updatedAt, delete sb.updatedAt, JSON.stringify(sa) === JSON.stringify(sb);
+}
+
+async function syncArrayEntity(entity, prevList) {
+  const prevById = new Map(prevList.map(r => [ r.id, r ])), currList = state[entity] || [], currIds = new Set(), nextList = [];
+  for (const rec of currList) {
+    if (!rec || !rec.id) continue;
+    currIds.add(rec.id);
+    const prevRec = prevById.get(rec.id);
+    let synced = !0;
+    if (!prevRec) {
+      const r = await apiCreate(entity, rec);
+      r.ok && r.body && r.body.updatedAt ? rec.updatedAt = r.body.updatedAt : (handleSyncError(entity, rec.id, r), synced = !1);
+    } else if (!sameRecord(prevRec, rec)) {
+      const r = await apiUpdate(entity, rec.id, rec, prevRec.updatedAt);
+      r.ok && r.body && r.body.updatedAt ? rec.updatedAt = r.body.updatedAt : (handleSyncError(entity, rec.id, r), synced = !1);
+    }
+    nextList.push(JSON.parse(JSON.stringify(synced ? rec : prevRec || rec)));
+  }
+  for (const prevRec of prevList) if (prevRec && prevRec.id && !currIds.has(prevRec.id)) {
+    const r = await apiDelete(entity, prevRec.id);
+    r.ok || 404 === r.status || (handleSyncError(entity, prevRec.id, r), nextList.push(prevRec));
+  }
+  return nextList;
+}
+
+async function syncNoticeActions(prevList) {
+  const currList = state.noticeActions || [], nextList = prevList.slice();
+  for (let i = prevList.length; i < currList.length; i++) {
+    const a = currList[i];
+    if (!a || !a.noticeId || !a.type) continue;
+    const r = await apiNoticeAction(a.noticeId, a.type, a.at);
+    r.ok ? nextList.push(JSON.parse(JSON.stringify(a))) : handleSyncError("noticeActions", a.noticeId, r);
+  }
+  return nextList;
+}
+
+async function syncSetting(key, prevValue) {
+  const currValue = state[key];
+  if (JSON.stringify(currValue) === JSON.stringify(prevValue)) return prevValue;
+  const r = await apiSettingsPatch(key, currValue);
+  return r.ok ? JSON.parse(JSON.stringify(currValue)) : (handleSyncError("settings:" + key, key, r), prevValue);
+}
+
+function handleSyncError(entity, id, r) {
+  409 === r.status ? toast(`⚠ ${entity} 항목을 다른 사람이 방금 수정했습니다 — 새로고침 후 다시 시도하세요`) : 403 === r.status ? toast(`⚠ ${entity} 수정 권한이 없습니다`) : toast(`⚠ 동기화 실패(${entity}): ` + (r.body && r.body.error || r.status));
 }
 
 /* 페이지를 열 때(가져오기·초기화 직후 포함) — 옛 값 변환 → 무검수 확정 → 통보 기한·자가 학습 판정 */
@@ -6090,6 +6371,14 @@ document.querySelectorAll("#nav button").forEach(e => {
   e.addEventListener("mousedown", t => {
     t.target === e && e.classList.remove("active");
   });
-}), load(), processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), warnIfCorrupted();
+});
+
+/* Phase 2 M4 — load()가 서버 세션을 확인하는 비동기 함수가 되면서,
+   로그인 안 돼 있으면 여기서 멈추고 로그인 화면만 보여준다.
+   로그인 성공 후 나머지 단계는 bootAfterLogin()이 이어서 실행. */
+(async () => {
+  const ok = await load();
+  ok && (processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), warnIfCorrupted());
+})();
 </script><div id="eulim-back" style="position:fixed;left:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(15,15,15,.84);backdrop-filter:blur(8px);box-shadow:0 8px 24px -10px rgba(0,0,0,.55);font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px;font-weight:600;letter-spacing:.02em"><a href="/" style="color:#fff;text-decoration:none">← eulim 포트폴리오</a> <span style="color:rgba(255,255,255,.35)">·</span> <a href="/#contact" style="color:#f06449;text-decoration:none">문의하기</a></div><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "26d90b7ff36944ca843fbf629d41d2df"}'></script><script>/*! Agent UX · 사람+에이전트 프로젝트 매니저 — (c) 2026 eulim. All rights reserved. | EU-AUX-260917-A4 */
 !function(){try{console.log("%cAgent UX · 사람+에이전트 프로젝트 매니저%c\n(c) 2026 eulim · All rights reserved.\n무단 복제·배포·상업적 이용을 금합니다.\n문의 biblical@naver.com · Build EU-AUX-260917-A4","color:#8B7CF6;font-weight:700;font-size:13px","color:#8A90AD;font-size:11px")}catch(o){}}()</script></body></html>
