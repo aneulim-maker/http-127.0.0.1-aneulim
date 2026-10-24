@@ -27,16 +27,14 @@
   },
 
   // schedule-manager Phase 2용 D1 데이터베이스.
-  // database_id는 자리표시자입니다 — 아래 명령으로 실제 DB를 만든 뒤
-  // 출력된 ID로 바꿔주세요(로컬 wrangler 로그인 필요, 제가 대신 못 함):
-  //   npx wrangler d1 create schedule-manager-db
-  //   npx wrangler d1 migrations apply schedule-manager-db --local   (로컬 테스트)
-  //   npx wrangler d1 migrations apply schedule-manager-db --remote  (실제 배포용)
+  // 2026-10-24 wrangler d1 create schedule-manager-db 로 실제 생성(APAC 리전).
+  // 로컬 테스트:  npx wrangler d1 migrations apply schedule-manager-db --local
+  // 실제 반영:    npx wrangler d1 migrations apply schedule-manager-db --remote
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "schedule-manager-db",
-      "database_id": "REPLACE_WITH_REAL_ID_AFTER_D1_CREATE",
+      "database_id": "632d64d4-f5ec-4aaa-9e78-9d510162559b",
       "migrations_dir": "migrations"
     }
   ],
