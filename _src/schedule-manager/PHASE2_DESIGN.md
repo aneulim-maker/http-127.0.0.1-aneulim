@@ -235,13 +235,43 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 
 | 단계 | 내용 | 비고 |
 |---|---|---|
-| M1 | D1 스키마 생성 + Worker 라우팅 뼈대 + `/api/health` | 로그인·프론트 변경 없음 |
+| M1 | D1 스키마 생성 + Worker 라우팅 뼈대 + `/api/health` | **완료**(로컬) — 로그인·프론트 변경 없음, 아래 "M1 완료 메모" 참고 |
 | M2 | 로그인/세션/역할 — `/api/login`, `/api/logout`, 쿠키 서명 검증 | |
 | M3 | `GET /api/state`(통짜 읽기) + `POST /api/migrate` + **레코드 단위** 쓰기 엔드포인트 전부 | 이 시점부터 서버가 진실의 원천(source of truth) |
 | M4 | 프론트의 `save()` 호출 43곳을 레코드별 API 호출로 전환 | 가장 손이 많이 가는 단계 |
 | M5 | 권한 반영 — 관리자 전용 6개 메뉴의 API 403 처리 + 프론트 메뉴 버튼 숨김(메뉴 단위라 비교적 단순) + 팀원 기본 화면을 "일정"으로 | |
 | M6 | 동시편집 충돌 UX(409 처리) + 30초 폴링 새로고침 | |
 | M7 | 실제 배포 — `wrangler login`, D1 생성, secret 등록, 배포, 2개 브라우저로 교차 테스트 | 사용자와 같이 진행 |
+
+---
+
+### M1 완료 메모 (2026-10-24, 로컬)
+
+**만든 것**
+- `migrations/0001_initial.sql` — 4장 스키마 그대로 SQL화(인덱스 포함, 20개 명령)
+- `worker/index.js` — `/api/*`만 처리하고 나머지는 그대로 정적 서빙에 맡기는 라우터. `/api/health`가 D1 연결까지 확인
+- `wrangler.jsonc`에 `main`(Worker 코드), `assets.binding`, `d1_databases` 바인딩 추가 — 기존 `assets.directory` 설정은 그대로 둠
+- `.assetsignore`에 `worker/`·`migrations/` 추가(공개 서빙 방지), 기존에 빠져 있던 `deploy.mjs`도 같이 추가
+
+**로컬 검증 결과** (`wrangler dev`)
+| 확인 항목 | 결과 |
+|---|---|
+| `GET /api/health` | `{"ok":true,"db":"connected",...}` — D1 바인딩 정상 |
+| `GET /api/존재안함` | JSON 404(API 전용 처리) |
+| `GET /`, `/schedule-manager/`, `/case-lms` 등 기존 페이지 | **그대로 200 — 정적 서빙 영향 없음 확인** |
+| 없는 정적 경로 | 기존 404 페이지로 정상 폴백 |
+| `/worker/index.js`, `/migrations/*.sql` | 404 — `.assetsignore`로 비공개 유지 확인 |
+
+로컬 D1(`.wrangler/state/`)에 마이그레이션 적용까지 끝남. **git에는 올리지 않음**(로컬 전용 캐시).
+
+**사용자가 직접 해야 하는 것 — 로컬에서 Cloudflare 계정 인증 필요**
+```bash
+npx wrangler login                                    # 1회
+npx wrangler d1 create schedule-manager-db             # 출력된 database_id 복사
+# wrangler.jsonc의 "REPLACE_WITH_REAL_ID_AFTER_D1_CREATE"를 그 값으로 교체
+npx wrangler d1 migrations apply schedule-manager-db --remote   # 실제 클라우드 DB에 스키마 적용
+```
+배포(`wrangler deploy`)는 아직 안 해도 됨 — M1은 기존 사이트에 영향 없는 인프라 뼈대뿐이라 지금 배포해도 안전하지만, M2(로그인)와 묶어서 한 번에 배포하는 것도 가능. 사용자 판단에 맡김.
 
 ---
 

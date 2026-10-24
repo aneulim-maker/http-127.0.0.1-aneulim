@@ -12,12 +12,21 @@ _src/**
 
 # ── 빌드 도구 / 설정 ──────────────────────────────────────────
 build.mjs
+deploy.mjs
 deploy-cf.bat
 wrangler.jsonc
 wrangler.toml
 package.json
 package-lock.json
 .assetsignore
+
+# ── schedule-manager Phase 2 — Worker 코드 · DB 마이그레이션 ──
+# wrangler.jsonc의 "main"/"d1_databases"가 따로 참조하므로 배포엔
+# 필요하지만, 정적 자산으로 공개 서빙될 필요는 없음(소스 노출 방지).
+worker/
+worker/**
+migrations/
+migrations/**
 
 # ── 개발 부산물 ───────────────────────────────────────────────
 node_modules/
