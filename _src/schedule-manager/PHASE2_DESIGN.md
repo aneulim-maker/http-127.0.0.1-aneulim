@@ -237,11 +237,39 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 |---|---|---|
 | M1 | D1 스키마 생성 + Worker 라우팅 뼈대 + `/api/health` | **완료** — 로컬 검증 + **실제 클라우드 D1까지 생성·스키마 적용 끝**. 로그인·프론트 변경 없음, 아래 "M1 완료 메모" 참고 |
 | M2 | 로그인/세션/역할 — `/api/login`, `/api/logout`, 쿠키 서명 검증 | **완료** — 아래 "M2 완료 메모" 참고 |
-| M3 | `GET /api/state`(통짜 읽기) + `POST /api/migrate` + **레코드 단위** 쓰기 엔드포인트 전부 | 이 시점부터 서버가 진실의 원천(source of truth) |
+| M3 | `GET /api/state`(통짜 읽기) + `POST /api/migrate` + **레코드 단위** 쓰기 엔드포인트 전부 | **완료** — D1이 진실의 원천이 됨(단, 프론트는 아직 연결 안 함). 아래 "M3 완료 메모" 참고 |
 | M4 | 프론트의 `save()` 호출 43곳을 레코드별 API 호출로 전환 | 가장 손이 많이 가는 단계 |
 | M5 | 권한 반영 — 관리자 전용 6개 메뉴의 API 403 처리 + 프론트 메뉴 버튼 숨김(메뉴 단위라 비교적 단순) + 팀원 기본 화면을 "일정"으로 | |
 | M6 | 동시편집 충돌 UX(409 처리) + 30초 폴링 새로고침 | |
 | M7 | 실제 배포 — `wrangler login`, D1 생성, secret 등록, 배포, 2개 브라우저로 교차 테스트 | 사용자와 같이 진행 |
+
+---
+
+### M3 완료 메모 (2026-10-24)
+
+**빠져 있던 테이블 발견·보완**: `state.noticeActions`(통보 확인/승인 기록 — 자체 id 없는 추가 전용 로그)가 0001 스키마에 없었음. `migrations/0002_notice_actions.sql`로 추가(로컬·원격 D1 둘 다 적용). `reviewRollups`는 코드에 선언·초기화만 있고 실제로 채워지는 곳이 하나도 없어(2026-10-24 기준 항상 빈 배열), 별도 테이블 없이 `settings`에 같이 둠.
+
+**권한 플래그 근거**: `readAdmin`/`writeAdmin`을 추측 아니라 `renderGantt`/`renderKanban`/`renderCalendar`/`renderAgentOps`(팀원 접근 가능 메뉴) 코드를 직접 확인해서 정함 — 넷 다 `state.assignments`/`expenses`/`contracts`/`rates`를 전혀 참조하지 않음 → 이 네 엔티티는 읽기·쓰기 전부 admin 전용. `members`는 업무보드·일정의 담당자 이름 표시에 필요해 전원 읽을 수 있게 하되, 레코드별 `rate`(개인 단가)만 `role=member`면 응답에서 뺌.
+
+**만든 엔드포인트**
+- `GET /api/state` — 모든 동기화 엔티티 + `noticeActions` + `settings`를 모아 기존 `state`와 같은 모양으로 반환, 위 권한에 따라 서버에서 필터링(프론트가 숨기는 것과 별개로 네트워크 응답 자체에서 차단)
+- `POST /api/<entity>`, `PATCH /api/<entity>/:id`, `DELETE /api/<entity>/:id` — projects·categories·milestones·tasks·assignments·members·expenses·contracts·reviews·notices. PATCH는 전체 레코드를 받고(앱이 원래 메모리에서 객체 전체를 고친 뒤 저장하는 방식과 동일), `ifUpdatedAt`을 보내면 낙관적 동시성 체크(불일치 시 409 + 현재값)
+- `POST /api/noticeActions` — 추가만 가능(앱 자체 설계와 동일), 역할 무관하게 로그인만 하면 가능
+- `PATCH /api/settings/:key` — `rates`/`aiRates` 등 전역 설정값, 전부 admin 전용(운영 규칙값인 `reviewSlaDays`도 포함)
+- `POST /api/migrate` — 기존 `exportData()` JSON을 그대로 받아 D1에 일괄 적재(admin만, 하나의 batch로 전부 성공하거나 전부 롤백)
+
+**검증** (`wrangler dev` + 로컬 D1, **원격 DB 데이터는 안 건드림** — 스키마만 두 마이그레이션으로 적용)
+| 시나리오 | 결과 |
+|---|---|
+| `GET /api/state` — admin | `assignments·contracts·expenses` 포함 |
+| `GET /api/state` — member | 위 셋 제외, `members`는 있지만 각 행의 `rate` 없음 |
+| `PATCH /api/settings/rates` — member | 403, admin | 200 → admin의 `state.rates`엔 보이고 member껀 안 보임 |
+| project 생성(member, 공통 메뉴 데이터) → 수정 → 잘못된 `ifUpdatedAt`으로 재수정 → 삭제 | 201 → 200 → **409(currentUpdatedAt 포함)** → 200 |
+| expense 생성 — member | 403, admin | 201 |
+| `POST /api/migrate` — member | 403, admin | 200 — `projects:1, tasks:1, expenses:1, noticeActions:1, settings:2` 정확히 집계, 한글·배열·불리언 전부 왕복 확인 |
+| 사이트 정적 서빙 + `/worker/`·`/migrations/` 비공개 | 그대로 유지 |
+
+**로컬 전용 함정 재발**: `wrangler dev` 구동 중 `SQLITE_BUSY`로 두 번 더 죽음 — 이번엔 동시에 다른 `d1 execute` 명령을 돌리지 않았는데도 발생해, dev 서버 자체의 파일 감시가 로컬 D1 파일 변경을 "소스 변경"으로 오인해 재시작을 거는 것으로 보임. 재시작하면 바로 정상화됨. 두 번 다 **크래시 직전까지의 모든 요청은 전부 정답**이었음(코드 문제 아님). 운영 D1(클라우드)은 로컬 파일이 아니라 이 문제와 무관.
 
 ---
 
