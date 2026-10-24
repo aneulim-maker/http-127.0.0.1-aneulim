@@ -236,12 +236,42 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 | 단계 | 내용 | 비고 |
 |---|---|---|
 | M1 | D1 스키마 생성 + Worker 라우팅 뼈대 + `/api/health` | **완료** — 로컬 검증 + **실제 클라우드 D1까지 생성·스키마 적용 끝**. 로그인·프론트 변경 없음, 아래 "M1 완료 메모" 참고 |
-| M2 | 로그인/세션/역할 — `/api/login`, `/api/logout`, 쿠키 서명 검증 | |
+| M2 | 로그인/세션/역할 — `/api/login`, `/api/logout`, 쿠키 서명 검증 | **완료** — 아래 "M2 완료 메모" 참고 |
 | M3 | `GET /api/state`(통짜 읽기) + `POST /api/migrate` + **레코드 단위** 쓰기 엔드포인트 전부 | 이 시점부터 서버가 진실의 원천(source of truth) |
 | M4 | 프론트의 `save()` 호출 43곳을 레코드별 API 호출로 전환 | 가장 손이 많이 가는 단계 |
 | M5 | 권한 반영 — 관리자 전용 6개 메뉴의 API 403 처리 + 프론트 메뉴 버튼 숨김(메뉴 단위라 비교적 단순) + 팀원 기본 화면을 "일정"으로 | |
 | M6 | 동시편집 충돌 UX(409 처리) + 30초 폴링 새로고침 | |
 | M7 | 실제 배포 — `wrangler login`, D1 생성, secret 등록, 배포, 2개 브라우저로 교차 테스트 | 사용자와 같이 진행 |
+
+---
+
+### M2 완료 메모 (2026-10-24)
+
+**만든 것** — `worker/index.js`에 추가(프론트 변경 없음, 로그인 화면은 M3/M4 때 붙임)
+- `POST /api/login` `{name, password}` — D1 `members`에서 이름 조회 + `TEAM_PASSWORD` Secret과 SHA-256 다이제스트 상수시간 비교. 성공 시 서명된 세션 쿠키 발급(httpOnly·Secure·SameSite=Lax·30일). 비밀번호 틀림과 이름 없음을 같은 `invalid_credentials`로 응답(계정 존재 여부 노출 방지)
+- `POST /api/logout` — 쿠키 제거
+- `GET /api/whoami` — 세션 없으면 401, 있으면 memberId/name/role
+- `GET /api/health`에 현재 세션 정보도 같이 표시(점검용)
+- 세션은 `base64url(JSON payload).base64url(HMAC-SHA256 서명)` 형태의 무상태 토큰 — `crypto.subtle.verify`로 검증, 세션 테이블 없음(3.1~3.2 근거 그대로)
+
+**로컬 비밀값**: `.dev.vars`(TEAM_PASSWORD·SESSION_SECRET 테스트용 값) 추가 + 이 저장소에 없었던 `.gitignore` 신설(`.dev.vars`, `.wrangler/`, `node_modules/` 제외) + `.assetsignore`에도 `.dev.vars` 추가(배포 시 공개 서빙 방지, 이중 안전장치)
+
+**검증** (`wrangler dev`, 로컬 D1에 테스트 멤버 2명 — `test-admin-1`/admin, `test-member-1`/member — 수동 삽입, **원격 DB는 건드리지 않음**)
+| 시나리오 | 결과 |
+|---|---|
+| 세션 없이 `/api/whoami` | 401 |
+| 잘못된 비밀번호 | 401 |
+| 관리자 로그인 | 200 + 쿠키, 응답에 `role:"admin"` |
+| 쿠키로 `/api/whoami` | 200, 올바른 역할 |
+| `/api/health` | 세션 정보 같이 표시 |
+| 로그아웃 → `/api/whoami` | 401로 복귀 |
+| 팀원 로그인 | 200, `role:"member"` |
+| 사이트 전체 정적 페이지 | 그대로 200(영향 없음) |
+| `/.dev.vars` | 404(비공개 확인) |
+
+**발견한 로컬 전용 함정**: `wrangler dev` 구동 중에 같은 로컬 D1 파일에 `wrangler d1 execute --local`을 동시에 실행하면 `SQLITE_BUSY`로 dev 서버가 죽음. DB 작업은 `wrangler dev` 띄우기 **전에** 끝낼 것(운영 D1은 로컬 파일이 아니라 클라우드라 이 문제와 무관).
+
+**사용자가 나중에 직접 해야 하는 것(실제 배포 시, M7)**: `wrangler secret put TEAM_PASSWORD`(팀이 쓸 실제 비밀번호, 본인이 정함), `wrangler secret put SESSION_SECRET`(랜덤 서명 키 — 제가 생성해드릴 수 있음). 지금은 로컬 테스트값(`.dev.vars`)만 쓰고 있어 운영 비밀값은 아직 없음.
 
 ---
 
