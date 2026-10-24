@@ -27,6 +27,7 @@ worker/
 worker/**
 migrations/
 migrations/**
+.dev.vars
 
 # ── 개발 부산물 ───────────────────────────────────────────────
 node_modules/

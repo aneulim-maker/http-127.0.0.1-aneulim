@@ -1,0 +1,4 @@
+# schedule-manager Phase 2 작업 중 추가 — 로컬 전용 산출물, 절대 커밋하지 않음.
+.dev.vars
+.wrangler/
+node_modules/
