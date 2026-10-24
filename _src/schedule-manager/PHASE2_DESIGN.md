@@ -235,7 +235,7 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 
 | 단계 | 내용 | 비고 |
 |---|---|---|
-| M1 | D1 스키마 생성 + Worker 라우팅 뼈대 + `/api/health` | **완료**(로컬) — 로그인·프론트 변경 없음, 아래 "M1 완료 메모" 참고 |
+| M1 | D1 스키마 생성 + Worker 라우팅 뼈대 + `/api/health` | **완료** — 로컬 검증 + **실제 클라우드 D1까지 생성·스키마 적용 끝**. 로그인·프론트 변경 없음, 아래 "M1 완료 메모" 참고 |
 | M2 | 로그인/세션/역할 — `/api/login`, `/api/logout`, 쿠키 서명 검증 | |
 | M3 | `GET /api/state`(통짜 읽기) + `POST /api/migrate` + **레코드 단위** 쓰기 엔드포인트 전부 | 이 시점부터 서버가 진실의 원천(source of truth) |
 | M4 | 프론트의 `save()` 호출 43곳을 레코드별 API 호출로 전환 | 가장 손이 많이 가는 단계 |
@@ -264,14 +264,20 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 
 로컬 D1(`.wrangler/state/`)에 마이그레이션 적용까지 끝남. **git에는 올리지 않음**(로컬 전용 캐시).
 
-**사용자가 직접 해야 하는 것 — 로컬에서 Cloudflare 계정 인증 필요**
+**실제 클라우드 D1 생성 — 완료 (2026-10-24)**
+사용자가 `wrangler login` 완료 후 직접 진행:
 ```bash
-npx wrangler login                                    # 1회
-npx wrangler d1 create schedule-manager-db             # 출력된 database_id 복사
-# wrangler.jsonc의 "REPLACE_WITH_REAL_ID_AFTER_D1_CREATE"를 그 값으로 교체
-npx wrangler d1 migrations apply schedule-manager-db --remote   # 실제 클라우드 DB에 스키마 적용
+npx wrangler d1 create schedule-manager-db
+# → database_id: 632d64d4-f5ec-4aaa-9e78-9d510162559b (APAC 리전)
+npx wrangler d1 migrations apply schedule-manager-db --remote
 ```
-배포(`wrangler deploy`)는 아직 안 해도 됨 — M1은 기존 사이트에 영향 없는 인프라 뼈대뿐이라 지금 배포해도 안전하지만, M2(로그인)와 묶어서 한 번에 배포하는 것도 가능. 사용자 판단에 맡김.
+`wrangler.jsonc`의 자리표시자를 실제 `database_id`로 교체하고 커밋(`bed73f3`). 검증:
+- `wrangler d1 migrations list --remote` → "No migrations to apply!"
+- `SELECT name FROM sqlite_master WHERE type='table'` → 10개 테이블 전부 확인
+
+참고 — `wrangler d1 migrations apply --remote` 실행 중 뜨는 확인 프롬프트(Y/n)는 Claude Code 터미널 패널에서 사용자 키 입력이 안정적으로 전달되지 않는 경우가 있었음. `$env:CI='true'` 로 비대화형 모드를 강제해 우회(프롬프트를 기본값 "yes"로 자동 처리). 다음에도 터미널 프롬프트가 막히면 이 방법을 먼저 시도할 것.
+
+배포(`wrangler deploy`)는 아직 안 함 — D1 리소스 자체는 생성됐지만 Worker 코드는 아직 운영 사이트(`eulim.dataplaner.workers.dev`)에 올라가지 않음. M2(로그인)와 묶어서 배포 예정.
 
 ---
 
