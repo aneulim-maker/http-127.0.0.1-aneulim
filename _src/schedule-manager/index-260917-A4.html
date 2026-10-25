@@ -1431,6 +1431,11 @@ let currentUser = null, lastSyncedSnapshot = null, serverSyncInFlight = !1, serv
 
 const SYNCED_ARRAY_KEYS = [ "projects", "contracts", "milestones", "tasks", "members", "categories", "assignments", "expenses", "reviews", "notices" ];
 const SYNCED_SETTINGS_KEYS = [ "rates", "aiRates", "aiStage", "aiReinvest", "aiCost", "aiInvoices", "aiScope", "reviewSlaDays" ];
+/* Phase 2 M5 — 관리자 전용 메뉴(PHASE2_DESIGN.md 1.1). 팀원에겐 메뉴
+   버튼 자체를 숨기고, state.view가 어떤 경로로든(URL 파라미터 등)
+   이 값이 되면 바로 "gantt"로 되돌린다 — API가 403으로 막는 것과
+   별개로 프론트에서도 접근 자체를 안 보여준다. */
+const ADMIN_ONLY_VIEWS = [ "dashboard", "people", "contract", "settlement", "cost", "aisim" ];
 
 /* ── 자동 백업(IndexedDB) ──────────────────────────────────────
    localStorage(STORE_KEY)는 한 곳뿐이라 캐시 삭제·기기 교체·손상에
@@ -1599,8 +1604,8 @@ async function load() {
     const e = t.get("tab");
     "people" === state.view ? state.peopleTab = e : "settlement" === state.view ? state.settleTab = e : "cost" === state.view && (state.costTab = e);
   }
-  // 팀원은 대시보드가 막힐 예정(M5) — 기본 화면을 일정으로 돌림(PHASE2_DESIGN.md 1.2)
-  "admin" !== currentUser.role && "dashboard" === state.view && (state.view = "gantt");
+  // 팀원이 URL 파라미터 등으로 관리자 전용 화면에 들어와 있으면 일정으로 되돌림(M5)
+  "admin" !== currentUser.role && ADMIN_ONLY_VIEWS.includes(state.view) && (state.view = "gantt");
 
   const m = migrate();
   (m.converted || m.events.length) && save();
@@ -6355,14 +6360,22 @@ function processRecurrence() {
 
 function render() {
   renderSidebar();
+  // 팀원이 state.view를 어떻게든(콘솔 조작 등) 관리자 전용 값으로 만들어도
+  // 렌더링 직전에 다시 한번 막는다 — load() 때의 체크와는 별개의 방어선.
+  currentUser && "admin" !== currentUser.role && ADMIN_ONLY_VIEWS.includes(state.view) && (state.view = "gantt");
   const e = state.view;
-  "dashboard" === e ? renderDashboard() : "people" === e ? renderPeople() : "gantt" === e ? renderGantt() : "kanban" === e ? renderKanban() : "agentops" === e ? renderAgentOps() : "calendar" === e ? renderCalendar() : "contract" === e ? renderContract() : "settlement" === e ? renderSettlement() : "cost" === e ? renderCost() : "aisim" === e ? renderAiSim() : renderDashboard(), 
-  document.querySelectorAll("#nav button").forEach(t => t.classList.toggle("active", t.dataset.view === e)),
+  "dashboard" === e ? renderDashboard() : "people" === e ? renderPeople() : "gantt" === e ? renderGantt() : "kanban" === e ? renderKanban() : "agentops" === e ? renderAgentOps() : "calendar" === e ? renderCalendar() : "contract" === e ? renderContract() : "settlement" === e ? renderSettlement() : "cost" === e ? renderCost() : "aisim" === e ? renderAiSim() : renderDashboard(),
+  document.querySelectorAll("#nav button").forEach(t => {
+    const isAdminOnly = ADMIN_ONLY_VIEWS.includes(t.dataset.view), hide = isAdminOnly && currentUser && "admin" !== currentUser.role;
+    t.style.display = hide ? "none" : "", t.classList.toggle("active", t.dataset.view === e);
+  }),
   document.getElementById("content").scrollTop = 0, renderNoticeBadge();
 }
 
 document.querySelectorAll("#nav button").forEach(e => {
   e.onclick = () => {
+    // 메뉴를 숨겨도 콘솔 등으로 클릭 이벤트를 억지로 부를 수 있어 한 번 더 막는다.
+    if (currentUser && "admin" !== currentUser.role && ADMIN_ONLY_VIEWS.includes(e.dataset.view)) return void toast("⚠ 접근 권한이 없는 메뉴입니다");
     state.view = e.dataset.view, closeSide(), render();
   };
 }), document.addEventListener("keydown", e => {
