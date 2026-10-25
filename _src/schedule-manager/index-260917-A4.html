@@ -420,7 +420,7 @@ aside.open{transform:translateX(0)}
 <ul class="side-list" id="categoryList">
 </ul>
 </div>
-<div class="side-group">
+<div class="side-group" id="baseInfoGroup">
 <h3>기준정보</h3><button class="side-btn" onclick="openRateModal()">⚙ 등급별 표준단가 설정</button> <button class="side-btn" onclick="openAiRateModal()">✦ AI 생산성 계수 설정</button> <button class="side-btn" onclick="openRulesModal()">⚡ 위임 규칙 임계값 설정</button> <button class="side-btn" onclick="resetDemoData()">↺ 시연 데이터 초기화</button>
 </div>
 </aside>
@@ -3709,8 +3709,16 @@ function addSampleAgentTasks() {
   }), save(), render(), toast(`${e.name}에 샘플 에이전트 과업 3건을 추가했습니다 — 검수 기록은 과업 상세에서 등록하세요`);
 }
 
+/* Phase 2 M5 사후 보강 — 서버 동기화(M4) 전에는 "이 브라우저만" 초기화하는
+   기능이었지만, 이제 save()가 D1까지 동기화하므로 관리자가 아니면 아예
+   막고, 관리자도 "팀 전체 공유 데이터가 지워진다"는 걸 명확히 알게 한다.
+   (seed()가 state.members 등을 통째로 교체 → save()의 diffing이 기존
+   레코드를 "삭제됨"으로 보고 서버에서도 지움 — 로컬 전용이던 시절과
+   동작이 달라졌다.) */
 function resetDemoData() {
-  if (confirm("현재 브라우저에 저장된 데이터를 모두 지우고 시연용 초기 데이터로 되돌립니다.\n되돌릴 수 없으니 필요하면 먼저 [엑셀 내보내기]로 백업하세요.\n\n계속할까요?")) {
+  if (currentUser && "admin" !== currentUser.role) return void toast("⚠ 관리자만 초기화할 수 있습니다");
+  const serverWarning = currentUser ? "\n\n⚠ 지금은 서버(D1)와 동기화되는 상태라, 이 작업은 당신 브라우저뿐 아니라 팀 전체가 보는 공유 데이터까지 전부 지우고 시연용 데이터로 바꿉니다." : "";
+  if (confirm(`현재 데이터를 모두 지우고 시연용 초기 데이터로 되돌립니다.${serverWarning}\n되돌릴 수 없으니 필요하면 먼저 [엑셀 내보내기]로 백업하세요.\n\n계속할까요?`)) {
     try {
       localStorage.removeItem(STORE_KEY);
     } catch (e) {}
@@ -5554,6 +5562,7 @@ function deleteExpense() {
 }
 
 function openRateModal() {
+  if (currentUser && "admin" !== currentUser.role) return void toast("⚠ 관리자만 설정할 수 있습니다");
   document.getElementById("rateRows").innerHTML = GRADES.map(e => `
     <label>${e} 등급 M/M 단가(원)</label>
     <input type="number" id="rate_${e}" step="100000" value="${state.rates[e] || 0}">`).join(""), 
@@ -5567,6 +5576,7 @@ function saveRates() {
 }
 
 function openAiRateModal() {
+  if (currentUser && "admin" !== currentUser.role) return void toast("⚠ 관리자만 설정할 수 있습니다");
   document.getElementById("aiRateRows").innerHTML = ROLES.map(e => `
     <div style="display:grid;grid-template-columns:1fr 90px;gap:10px;align-items:center;margin-bottom:8px">
       <span style="font-size:13px;font-weight:600">${e}</span>
@@ -5587,6 +5597,7 @@ function saveAiRates() {
 const RULE_FIELDS = [ [ "minN", "판단 최소 표본(건)", "승격: 검수 완료 건수 · 강등: 유출률 표본", 1, 1, !0 ], [ "promoteLoPct", "승격 기준 — 수정 없이 통과 Wilson 하한(%)", "L2 → L3 승격 제안", 0, 1, !1 ], [ "demoteM2Pct", "강등 기준 — 유출률(M2) 초과(%)", "L3 → L2 자동 강등", 0, .5, !1 ], [ "ackHours", "즉시 통보 확인 기한(시간)", "넘기면 L3 과업은 L2로 자동 강등", .01, 1, !1 ], [ "samplePct", "L3 표본 검수 비율(%)", "실행 기록 중 무작위로 책임자 검수 지정", 0, 1, !1 ], [ "reviseRepeat", "명세 개정 제안 — 같은 결함 유형 반복(회)", "현재 명세 적용 후 검수 기준", 1, 1, !0 ] ];
 
 function openRulesModal(useDefaults) {
+  if (currentUser && "admin" !== currentUser.role) return void toast("⚠ 관리자만 설정할 수 있습니다");
   const R = useDefaults ? {
     ...DEFAULT_RULES
   } : rules();
@@ -6385,7 +6396,11 @@ function render() {
   document.querySelectorAll("#nav button").forEach(t => {
     const isAdminOnly = ADMIN_ONLY_VIEWS.includes(t.dataset.view), hide = isAdminOnly && currentUser && "admin" !== currentUser.role;
     t.style.display = hide ? "none" : "", t.classList.toggle("active", t.dataset.view === e);
-  }),
+  });
+  // 사이드바 "기준정보"(단가·AI계수·위임규칙·시연데이터 초기화)도 관리자 전용 메뉴와
+  // 같은 기준으로 숨김 — resetDemoData()는 이제 서버 공유 데이터를 건드리므로 특히 중요.
+  const baseInfoGroup = document.getElementById("baseInfoGroup");
+  baseInfoGroup && (baseInfoGroup.style.display = currentUser && "admin" !== currentUser.role ? "none" : "");
   document.getElementById("content").scrollTop = 0, renderNoticeBadge();
 }
 
