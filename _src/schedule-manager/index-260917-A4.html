@@ -1664,7 +1664,7 @@ async function doAppLogout() {
 /* 로그인 성공 직후 — 부트스트랩 시퀀스 중 load() 이후 단계를 그대로 반복 */
 async function bootAfterLogin() {
   const ok = await load();
-  ok && (processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), warnIfCorrupted());
+  ok && (processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), setInterval(pollServerState, 3e4), warnIfCorrupted());
 }
 
 /* ── API 헬퍼 ────────────────────────────────────────────────── */
@@ -1788,7 +1788,13 @@ function queueServerSync() {
   syncToServer().catch(e => {
     toast("⚠ 서버 동기화 실패(로컬엔 저장됨) — " + (e && e.message || e));
   }).finally(() => {
-    serverSyncInFlight = !1, serverSyncQueued && (serverSyncQueued = !1, queueServerSync());
+    serverSyncInFlight = !1;
+    // M6 — 이번 동기화 중 409(충돌)난 레코드가 있으면, lastSyncedSnapshot이
+    // 막 확정된 "지금" 처리한다(동기화 도중에 바로 처리하면 아래 syncToServer가
+    // 끝에서 lastSyncedSnapshot을 통째로 덮어써 방금 고친 값을 지워버리는
+    // 경합이 생긴다 — 그래서 꼭 여기, finally에서 처리).
+    pendingConflicts.length && resolveConflicts(pendingConflicts.splice(0));
+    serverSyncQueued && (serverSyncQueued = !1, queueServerSync());
   });
 }
 
@@ -1851,8 +1857,70 @@ async function syncSetting(key, prevValue) {
   return r.ok ? JSON.parse(JSON.stringify(currValue)) : (handleSyncError("settings:" + key, key, r), prevValue);
 }
 
+let pendingConflicts = [];
+
 function handleSyncError(entity, id, r) {
-  409 === r.status ? toast(`⚠ ${entity} 항목을 다른 사람이 방금 수정했습니다 — 새로고침 후 다시 시도하세요`) : 403 === r.status ? toast(`⚠ ${entity} 수정 권한이 없습니다`) : toast(`⚠ 동기화 실패(${entity}): ` + (r.body && r.body.error || r.status));
+  409 === r.status ? (toast(`⚠ ${entity} 항목을 다른 사람이 방금 수정했습니다 — 최신 내용으로 갱신합니다`), pendingConflicts.push({
+    entity: entity,
+    id: id
+  })) : 403 === r.status ? toast(`⚠ ${entity} 수정 권한이 없습니다`) : toast(`⚠ 동기화 실패(${entity}): ` + (r.body && r.body.error || r.status));
+}
+
+/* ── M6 — 충돌 해소 + 주기적 폴링 ─────────────────────────────────
+   설계서 6장: "가끔" 수준 충돌엔 실시간 동기화(WebSocket 등)는 과하다고
+   판단해 30초 폴링 + 409 발생 시 그 레코드만 자동 최신화하는 선에서
+   끝낸다. 둘 다 같은 mergeEntityFromServer()를 쓴다 — 차이는 폴링은
+   "로컬이 손 안 댄 레코드만" 조용히 갱신하고(한창 수정 중인 걸 덮어쓰지
+   않기 위해), 충돌 해소는 그 레코드 하나만 서버 값으로 강제 덮어쓴다
+   (서버가 이미 이겼으니 — 안 그러면 다음 save()에서 또 충돌 난다). */
+
+async function resolveConflicts(list) {
+  const result = await apiFetchState().catch(() => null);
+  if (!result || !result.ok) return;
+  const byEntity = {};
+  for (const c of list) (byEntity[c.entity] || (byEntity[c.entity] = new Set())).add(c.id);
+  for (const entity of Object.keys(byEntity)) SYNCED_ARRAY_KEYS.includes(entity) && mergeEntityFromServer(entity, result.state[entity] || [], byEntity[entity]);
+  render();
+}
+
+async function pollServerState() {
+  if (!currentUser || serverSyncInFlight || !lastSyncedSnapshot) return;
+  const result = await apiFetchState().catch(() => null);
+  if (!result || !result.ok) return;
+  for (const key of SYNCED_ARRAY_KEYS) mergeEntityFromServer(key, result.state[key] || []);
+  mergeNoticeActionsFromServer(result.state.noticeActions || []);
+  for (const key of SYNCED_SETTINGS_KEYS) void 0 !== result.state[key] && mergeSettingFromServer(key, result.state[key]);
+  render();
+}
+
+/* entity 하나의 서버 목록을 로컬에 반영. forceIds에 있는 id는 로컬에
+   아직 동기화 안 된 변경이 있어도 서버 값으로 강제 덮어쓴다(충돌 해소용).
+   그 외엔 "스냅샷과 다른(= 아직 동기화 안 된) 로컬 레코드"는 건드리지
+   않아 — 한창 입력 중인 변경을 폴링이 덮어쓰는 일이 없게 한다. */
+function mergeEntityFromServer(entity, serverList, forceIds) {
+  const snap = lastSyncedSnapshot[entity] || [], snapById = new Map(snap.map(r => [ r.id, r ])), localList = state[entity] || [], localById = new Map(localList.map(r => [ r.id, r ])), serverIds = new Set(), merged = [], newSnap = [];
+  for (const serverRec of serverList) {
+    serverIds.add(serverRec.id);
+    const localRec = localById.get(serverRec.id), snapRec = snapById.get(serverRec.id), isDirty = localRec && (!snapRec || !sameRecord(localRec, snapRec)), force = forceIds && forceIds.has(serverRec.id);
+    if (!localRec || !isDirty || force) {
+      const copy = JSON.parse(JSON.stringify(serverRec));
+      merged.push(copy), newSnap.push(JSON.parse(JSON.stringify(copy)));
+    } else merged.push(localRec), newSnap.push(snapRec || JSON.parse(JSON.stringify(localRec)));
+  }
+  for (const localRec of localList) if (!serverIds.has(localRec.id)) {
+    snapById.has(localRec.id) || merged.push(localRec);
+  }
+  state[entity] = merged, lastSyncedSnapshot[entity] = newSnap;
+}
+
+function mergeNoticeActionsFromServer(serverList) {
+  const key = a => a.noticeId + "|" + a.type + "|" + a.at, serverKeys = new Set(serverList.map(key)), prevSnap = lastSyncedSnapshot.noticeActions || [], prevKeys = new Set(prevSnap.map(key)), localOnlyPending = (state.noticeActions || []).filter(a => !serverKeys.has(key(a)) && !prevKeys.has(key(a)));
+  lastSyncedSnapshot.noticeActions = JSON.parse(JSON.stringify(serverList)), state.noticeActions = serverList.map(a => JSON.parse(JSON.stringify(a))).concat(localOnlyPending);
+}
+
+function mergeSettingFromServer(key, serverValue) {
+  const isDirty = JSON.stringify(state[key]) !== JSON.stringify(lastSyncedSnapshot[key]);
+  isDirty || (state[key] = JSON.parse(JSON.stringify(serverValue ?? null))), lastSyncedSnapshot[key] = JSON.parse(JSON.stringify(serverValue ?? null));
 }
 
 /* 페이지를 열 때(가져오기·초기화 직후 포함) — 옛 값 변환 → 무검수 확정 → 통보 기한·자가 학습 판정 */
@@ -6423,7 +6491,7 @@ document.querySelectorAll("#nav button").forEach(e => {
    로그인 성공 후 나머지 단계는 bootAfterLogin()이 이어서 실행. */
 (async () => {
   const ok = await load();
-  ok && (processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), warnIfCorrupted());
+  ok && (processRecurrence(), requestNoti(), render(), checkReminders(), setInterval(checkReminders, 6e4), setInterval(pollServerState, 3e4), warnIfCorrupted());
 })();
 </script><div id="eulim-back" style="position:fixed;left:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(15,15,15,.84);backdrop-filter:blur(8px);box-shadow:0 8px 24px -10px rgba(0,0,0,.55);font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px;font-weight:600;letter-spacing:.02em"><a href="/" style="color:#fff;text-decoration:none">← eulim 포트폴리오</a> <span style="color:rgba(255,255,255,.35)">·</span> <a href="/#contact" style="color:#f06449;text-decoration:none">문의하기</a></div><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "26d90b7ff36944ca843fbf629d41d2df"}'></script><script>/*! Agent UX · 사람+에이전트 프로젝트 매니저 — (c) 2026 eulim. All rights reserved. | EU-AUX-260917-A4 */
 !function(){try{console.log("%cAgent UX · 사람+에이전트 프로젝트 매니저%c\n(c) 2026 eulim · All rights reserved.\n무단 복제·배포·상업적 이용을 금합니다.\n문의 biblical@naver.com · Build EU-AUX-260917-A4","color:#8B7CF6;font-weight:700;font-size:13px","color:#8A90AD;font-size:11px")}catch(o){}}()</script></body></html>

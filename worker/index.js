@@ -54,7 +54,7 @@ const ENTITIES = {
     fromRow(r) {
       return {
         id: r.id, name: r.name, client: r.client, color: r.color, start: r.start, end: r.end,
-        status: r.status, kind: r.kind, desc: r.desc, pmId: r.pm_id,
+        status: r.status, kind: r.kind, desc: r.desc, pmId: r.pm_id, updatedAt: r.updated_at,
       };
     },
   },
@@ -66,7 +66,7 @@ const ENTITIES = {
       return { id: o.id, name: o.name ?? null, color: o.color ?? null };
     },
     fromRow(r) {
-      return { id: r.id, name: r.name, color: r.color };
+      return { id: r.id, name: r.name, color: r.color, updatedAt: r.updated_at };
     },
   },
   milestones: {
@@ -77,7 +77,7 @@ const ENTITIES = {
       return { id: o.id, project_id: o.projectId ?? null, name: o.name ?? null, start: o.start ?? null, end: o.end ?? null };
     },
     fromRow(r) {
-      return { id: r.id, projectId: r.project_id, name: r.name, start: r.start, end: r.end };
+      return { id: r.id, projectId: r.project_id, name: r.name, start: r.start, end: r.end, updatedAt: r.updated_at };
     },
   },
   tasks: {
@@ -113,6 +113,7 @@ const ENTITIES = {
         priority: r.priority, md: r.md, tags: r.tags_json ? JSON.parse(r.tags_json) : [],
         recurrence: r.recurrence, completedAt: r.completed_at, spawned: !!r.spawned,
         executor: r.executor, agentSpec: r.agent_spec_json ? JSON.parse(r.agent_spec_json) : null,
+        updatedAt: r.updated_at,
       };
     },
   },
@@ -131,6 +132,7 @@ const ENTITIES = {
       return {
         id: r.id, memberId: r.member_id, projectId: r.project_id, role: r.role,
         from: r.from_ym, to: r.to_ym, alloc: r.alloc_json ? JSON.parse(r.alloc_json) : {},
+        updatedAt: r.updated_at,
       };
     },
   },
@@ -151,6 +153,7 @@ const ENTITIES = {
       return {
         id: r.id, name: r.name, role: r.role_title, grade: r.grade, emp: r.emp, org: r.org,
         rate: opts && opts.stripRate ? undefined : r.rate, skill: r.skill, authRole: r.auth_role,
+        updatedAt: r.updated_at,
       };
     },
   },
@@ -169,6 +172,7 @@ const ENTITIES = {
       return {
         id: r.id, projectId: r.project_id, date: r.date, category: r.category, amount: r.amount,
         vendor: r.vendor, status: r.status, vatIncluded: !!r.vat_flag, memo: r.memo,
+        updatedAt: r.updated_at,
       };
     },
   },
@@ -190,6 +194,7 @@ const ENTITIES = {
         vatIncluded: !!r.vat_included, mm: r.mm, signed: r.signed, start: r.start, end: r.end,
         owner: r.owner, warranty: r.warranty, note: r.note,
         phases: r.phases_json ? JSON.parse(r.phases_json) : [],
+        updatedAt: r.updated_at,
       };
     },
   },
@@ -203,9 +208,9 @@ const ENTITIES = {
     },
     fromRow(r) {
       try {
-        return JSON.parse(r.data_json);
+        return { ...JSON.parse(r.data_json), updatedAt: r.updated_at };
       } catch (err) {
-        return { id: r.id, taskId: r.task_id };
+        return { id: r.id, taskId: r.task_id, updatedAt: r.updated_at };
       }
     },
   },
@@ -218,9 +223,9 @@ const ENTITIES = {
     },
     fromRow(r) {
       try {
-        return JSON.parse(r.data_json);
+        return { ...JSON.parse(r.data_json), updatedAt: r.updated_at };
       } catch (err) {
-        return { id: r.id };
+        return { id: r.id, updatedAt: r.updated_at };
       }
     },
   },
