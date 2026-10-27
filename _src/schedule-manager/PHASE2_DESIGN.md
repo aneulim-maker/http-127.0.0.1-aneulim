@@ -241,7 +241,19 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 | M4 | 프론트의 `save()` 호출 43곳을 레코드별 API 호출로 전환 | **완료** — 단, 설계를 바꿔서 43곳은 안 건드림(아래 "M4 완료 메모" 참고) |
 | M5 | 권한 반영 — 관리자 전용 6개 메뉴의 API 403 처리 + 프론트 메뉴 버튼 숨김(메뉴 단위라 비교적 단순) + 팀원 기본 화면을 "일정"으로 | **완료** — 아래 "M5 완료 메모" 참고 |
 | M6 | 동시편집 충돌 UX(409 처리) + 30초 폴링 새로고침 | **완료** — 테스트 중 중대한 기존 버그도 발견·수정(아래 "M6 완료 메모") |
-| M7 | 실제 배포 — `wrangler login`, D1 생성, secret 등록, 배포, 2개 브라우저로 교차 테스트 | 사용자와 같이 진행 |
+| M7 | 실제 배포 — `wrangler login`, D1 생성, secret 등록, 배포, 2개 브라우저로 교차 테스트 | **완료** — 아래 "M7 완료 메모" 참고 |
+
+---
+
+### M7 완료 메모 (2026-10-27)
+
+**실제 운영 배포 완료.**
+
+- `TEAM_PASSWORD`(사용자가 직접 정한 공용 비밀번호), `SESSION_SECRET`(새로 생성한 랜덤 값, `.dev.vars`의 로컬 테스트용과 별개)을 `wrangler secret put`으로 운영 Worker("eulim")에 등록 완료.
+- `wrangler deploy` 실행 → `https://eulim.dataplaner.workers.dev` 로 배포됨. schedule-manager는 `https://eulim.dataplaner.workers.dev/schedule-manager/` 경로로 서빙.
+- **배포 직후 발견한 부트스트랩 문제**: 운영 D1의 `members` 테이블이 완전히 비어 있어서, 로그인 자체가 불가능했음(`/api/login`은 이름이 `members`에 있어야 통과) — 그리고 `/api/migrate`는 admin 로그인이 있어야만 쓸 수 있어서 닭과 달걀 문제였음. `wrangler d1 execute --remote`로 최초 admin 계정(`id='admin-1', name='admin', auth_role='admin'`)을 직접 INSERT해서 해결.
+- `curl`로 `/api/login`(name=admin, 사용자가 정한 비밀번호) → `200 OK` + 세션 쿠키 발급 확인, `/api/whoami`(비로그인) → `401`, 정적 페이지 → `200` 확인.
+- **아직 안 한 것**: 실제 팀원 계정 추가(현재 admin 1명뿐), 2개 브라우저 교차 테스트, 기존 데모성 데이터를 운영 D1로 옮길지 여부(현재는 비어 있는 새 DB로 시작).
 
 ---
 
