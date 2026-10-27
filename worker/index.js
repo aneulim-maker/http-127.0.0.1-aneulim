@@ -146,14 +146,14 @@ const ENTITIES = {
       return {
         id: o.id, name: o.name ?? null, role_title: o.role ?? null, grade: o.grade ?? null,
         emp: o.emp ?? null, org: o.org ?? null, rate: o.rate ?? null, skill: o.skill ?? null,
-        auth_role: o.authRole || "member",
+        auth_role: o.authRole || "member", keep_on_reset: o.keepOnReset ? 1 : 0,
       };
     },
     fromRow(r, opts) {
       return {
         id: r.id, name: r.name, role: r.role_title, grade: r.grade, emp: r.emp, org: r.org,
         rate: opts && opts.stripRate ? undefined : r.rate, skill: r.skill, authRole: r.auth_role,
-        updatedAt: r.updated_at,
+        keepOnReset: !!r.keep_on_reset, updatedAt: r.updated_at,
       };
     },
   },

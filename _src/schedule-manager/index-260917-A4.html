@@ -3786,16 +3786,18 @@ function addSampleAgentTasks() {
 function resetDemoData() {
   if (currentUser && "admin" !== currentUser.role) return void toast("⚠ 관리자만 초기화할 수 있습니다");
   const serverWarning = currentUser ? "\n\n⚠ 지금은 서버(D1)와 동기화되는 상태라, 이 작업은 당신 브라우저뿐 아니라 팀 전체가 보는 공유 데이터까지 전부 지우고 시연용 데이터로 바꿉니다." : "";
-  if (confirm(`현재 데이터를 모두 지우고 시연용 초기 데이터로 되돌립니다.${serverWarning}\n되돌릴 수 없으니 필요하면 먼저 [엑셀 내보내기]로 백업하세요.\n\n계속할까요?`)) {
+  if (confirm(`현재 데이터를 모두 지우고 시연용 초기 데이터로 되돌립니다.${serverWarning}\n되돌릴 수 없으니 필요하면 먼저 [엑셀 내보내기]로 백업하세요.\n\n(로그인 계정으로 표시된 멤버는 유지됩니다.)\n\n계속할까요?`)) {
     try {
       localStorage.removeItem(STORE_KEY);
     } catch (e) {}
+    const keptMembers = state.members.filter((m) => m.keepOnReset);
     state.projects = [], state.contracts = [], state.milestones = [], state.tasks = [],
     state.members = [], state.categories = [], state.assignments = [], state.expenses = [],
     state.reviews = [], state.reviewRollups = [], state.notices = [], state.noticeActions = [],
     state.rules = {
       ...DEFAULT_RULES
-    }, state.selectedProjectId = null, seed(), migrate(), save(), render(), toast("시연 데이터로 초기화했습니다");
+    }, state.selectedProjectId = null, seed(), state.members = state.members.concat(keptMembers),
+    migrate(), save(), render(), toast("시연 데이터로 초기화했습니다" + (keptMembers.length ? ` (로그인 계정 ${keptMembers.length}개 유지)` : ""));
   }
 }
 

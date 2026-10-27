@@ -253,7 +253,19 @@ Worker에 `/api/*` 라우트 추가 (정적 자산 서빙은 그대로 유지).
 - `wrangler deploy` 실행 → `https://eulim.dataplaner.workers.dev` 로 배포됨. schedule-manager는 `https://eulim.dataplaner.workers.dev/schedule-manager/` 경로로 서빙.
 - **배포 직후 발견한 부트스트랩 문제**: 운영 D1의 `members` 테이블이 완전히 비어 있어서, 로그인 자체가 불가능했음(`/api/login`은 이름이 `members`에 있어야 통과) — 그리고 `/api/migrate`는 admin 로그인이 있어야만 쓸 수 있어서 닭과 달걀 문제였음. `wrangler d1 execute --remote`로 최초 admin 계정(`id='admin-1', name='admin', auth_role='admin'`)을 직접 INSERT해서 해결.
 - `curl`로 `/api/login`(name=admin, 사용자가 정한 비밀번호) → `200 OK` + 세션 쿠키 발급 확인, `/api/whoami`(비로그인) → `401`, 정적 페이지 → `200` 확인.
-- **아직 안 한 것**: 실제 팀원 계정 추가(현재 admin 1명뿐), 2개 브라우저 교차 테스트, 기존 데모성 데이터를 운영 D1로 옮길지 여부(현재는 비어 있는 새 DB로 시작).
+- **아직 안 한 것**: 2개 브라우저 교차 테스트.
+
+---
+
+### M7 사후 추가 — 데모 데이터 적재 + 로그인 계정이 리셋에 휩쓸리는 문제 (2026-10-27)
+
+**데모 데이터 적재**: 사이드바 "↺ 시연 데이터 초기화"(`resetDemoData()`)를 운영 사이트에서 admin으로 직접 눌러 실행 — `seed()`가 만든 데모 인력·프로젝트·업무 등을 그대로 D1에 동기화. 확인된 적재 건수: members 12(관리자 2 포함), projects 4, milestones 10, categories 10, assignments 13, expenses 10, reviews 21, contracts 4. (`tasks`는 시드에 0건 — `seedKanbanTasks` 등 사용자가 직접 추가해야 하는 구조로 보임, 버그 아님.)
+
+**발견한 문제**: `resetDemoData()`는 `state.members`를 통째로 비우고 시드 데이터로 교체 → `save()`의 diffing이 기존 멤버를 "삭제됨"으로 보고 서버에서도 지움. 그 결과 부트스트랩 때 만든 로그인 계정(`admin`)이 데모 리셋 한 번에 통째로 날아감 — 재로그인 불가 상태가 됐었음.
+
+**수정**: `members` 테이블에 `keep_on_reset`(기본 0) 컬럼 추가(`migrations/0003_member_keep_on_reset.sql`). `resetDemoData()`가 멤버를 비우기 전에 `keepOnReset`이 켜진 멤버만 따로 보관해뒀다가, `seed()`가 새 데모 멤버를 채운 뒤 그 뒤에 다시 합쳐 넣음 — 로그인 계정은 데모 리셋을 몇 번 돌려도 안 지워짐. `worker/index.js`의 `members` 엔티티 `toRow`/`fromRow`에 `keepOnReset` 매핑 추가.
+
+로그인용으로 `admin`(관리자)·`member`(팀원) 두 계정을 `keep_on_reset=1`로 다시 생성, 둘 다 `/api/login` 성공 확인(`curl`).
 
 ---
 
