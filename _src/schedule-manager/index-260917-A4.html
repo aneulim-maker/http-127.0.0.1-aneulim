@@ -558,9 +558,9 @@ aside.open{transform:translateX(0)}
 <div class="r3">
 <div><label>수행 역할</label><input type="text" id="assignRole" placeholder="예: 백엔드 개발">
 </div>
-<div><label>투입 시작(월)</label><input type="month" id="assignFrom">
+<div><label>투입 시작일</label><input type="date" id="assignFrom">
 </div>
-<div><label>투입 종료(월)</label><input type="month" id="assignTo">
+<div><label>투입 종료일</label><input type="date" id="assignTo">
 </div>
 </div>
 <div class="r2">
@@ -2232,9 +2232,20 @@ function contractOf(e) {
   return state.contracts.find(t => t.projectId === e);
 }
 
+/* 투입 기간의 시작/종료 달(= from/to가 걸친 양 끝 달)만 일수 비례로 깎는다.
+   from/to가 예전처럼 "YYYY-MM"(일 정보 없음)이면 길이로 구분해 그 달 전체로
+   취급 — 레코드별로 일 단위 입력 여부가 달라도 동일한 함수로 처리된다. */
+function monthDayFraction(ym, fromStr, toStr) {
+  const [y, m] = ym.split("-").map(Number), monthStart = new Date(y, m - 1, 1), monthEnd = new Date(y, m, 0),
+    from = fromStr && fromStr.length > 7 ? parseDate(fromStr) : monthStart,
+    to = toStr && toStr.length > 7 ? parseDate(toStr) : monthEnd,
+    rangeStart = from > monthStart ? from : monthStart, rangeEnd = to < monthEnd ? to : monthEnd;
+  return rangeStart > rangeEnd ? 0 : (daysBetween(rangeStart, rangeEnd) + 1) / monthEnd.getDate();
+}
+
 function assignMM(e, t) {
   const n = e.alloc || {};
-  return Object.keys(n).reduce((e, s) => !t || t.includes(s) ? e + (n[s] || 0) / 100 : e, 0);
+  return Object.keys(n).reduce((acc, s) => !t || t.includes(s) ? acc + (n[s] || 0) / 100 * monthDayFraction(s, e.from, e.to) : acc, 0);
 }
 
 function assignCost(e, t) {
@@ -5403,6 +5414,16 @@ function fillAllocations() {
   renderAllocRows();
 }
 
+/* 예전 레코드는 from/to가 "YYYY-MM"(월 단위)로만 저장돼 있을 수 있음 —
+   <input type="date">에 그대로 넣으면 무효값이라 비어 보이므로, 시작은
+   그 달 1일로, 종료는 그 달 말일로 채워서 보여준다. 이미 전체 날짜면 그대로. */
+function asFullDate(v, endOfMonth) {
+  if (!v) return v;
+  if (v.length > 7) return v;
+  const [y, m] = v.split("-").map(Number);
+  return endOfMonth ? `${y}-${String(m).padStart(2, "0")}-${String(new Date(y, m, 0).getDate()).padStart(2, "0")}` : `${v}-01`;
+}
+
 function openAssignModal(e) {
   const t = e ? state.assignments.find(t => t.id === e) : null;
   document.getElementById("assignModalTitle").textContent = t ? "투입 수정" : "인력 투입", 
@@ -5410,8 +5431,8 @@ function openAssignModal(e) {
   fillSelect(document.getElementById("assignProject"), projOpts(), t?.projectId || state.selectedProjectId || state.projects[0]?.id), 
   document.getElementById("assignRole").value = t?.role || "";
   const n = projectById(t?.projectId || state.selectedProjectId || state.projects[0]?.id);
-  document.getElementById("assignFrom").value = t?.from || ymOf(n?.start) || todayStr().slice(0, 7), 
-  document.getElementById("assignTo").value = t?.to || ymOf(n?.end) || todayStr().slice(0, 7), 
+  document.getElementById("assignFrom").value = asFullDate(t?.from) || n?.start || todayStr(),
+  document.getElementById("assignTo").value = asFullDate(t?.to, !0) || n?.end || todayStr(),
   document.getElementById("assignRate").value = 100, allocDraft = t ? {
     ...t.alloc
   } : {}, t ? renderAllocRows() : fillAllocations(), document.getElementById("assignFrom").onchange = renderAllocRows, 
